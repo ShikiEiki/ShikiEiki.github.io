@@ -162,14 +162,27 @@
 <h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>这个库实现的最方便的功能是:我们拿到UI部门给出的以px为单位标注的设计图后,直接照抄上面的px尺寸就能写出一套适配于所有分辨率的xml layout.不仅免去了对着设计图把px转成dp的麻烦,而且也不用为不同的屏幕编写多套layout.很有一套UI打遍天下的感觉.<br>而且使用这个库理论上完全可以使用一个FrameLayout,里面的view使用margin定位,不用嵌套就能完成UI,对UI效率也有很大提升.</p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>简单学习了一下源码,这个库的核心思想是,事先按照设计图设定好设计图的宽高(design_width/design_height),然后把设计图上所有控件的px尺寸按原单位px填入xml文件中,最终这个库会根据设计图总体尺寸和控件尺寸,算出控件在设计图上占的宽高比,再根据实际屏幕大小动态放大或缩小控件以保证控件在实际屏幕上占的比例和在设计图上占的比例一致.</p>
 <p>这种按比例缩放的方法不仅可以用在控件本身的大小上,也可以同理应用到控件的margin/padding/textSize等跟大小相关的属性上,统一缩放以后,在不同的屏幕上显示的效果就都跟设计图上一致了.</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ol>
-<li>首先添加库引用.</li>
-</ol>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>1.首先添加库引用.</p>
 <figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.zhy:autolayout:1.4.5'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ol>
-<li>在项目的AndroidManifest中注明设计稿的尺寸。</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;meta-data android:name="design_width" android:value="768"&gt;</div><div class="line">&lt;/meta-data&gt;</div><div class="line">&lt;meta-data android:name="design_height" android:value="1280"&gt;</div><div class="line">&lt;/meta-data&gt;</div></pre></td></tr></table></figure>
+<p>2.在项目的AndroidManifest中注明设计稿的尺寸。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"design_width"</span> <span class="attr">android:value</span>=<span class="string">"768"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"design_height"</span> <span class="attr">android:value</span>=<span class="string">"1280"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>3.界面的改动.</p>
+<ul>
+<li>Activity界面的用法</li>
+</ul>
+<p>让Activity继承AutoLayoutActivity</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AutoLayoutActivity</span> </span>&#123;</div><div class="line"></div><div class="line">.......</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后activity的layout所有的dp全部换成px.就这么简单!</p>
+<ul>
+<li>Fragment界面的用法</li>
+</ul>
+<p>在onCreateView生成返回生成的view之前使用AutoUtils重新计算view的大小(一定要在对view的全部处理完成后再调整大小).</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Nullable</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">	View view = .......</div><div class="line">    .........</div><div class="line">	.........</div><div class="line">	AutoUtils.autoSize(view);</div><div class="line">    <span class="keyword">return</span> view;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>动态生成的view的用法</li>
+</ul>
+<p>以上两种都是对xml中写好的静态的layout进行大小适配的用法.如果需要动态生成view,比如生成页码按钮,添加到页码容器中,需要在生成结束后,添加到容器之前调用AutoUtils进行大小调整.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//动态生成pageBtn,并且动态设置宽高间隔等</span></div><div class="line">TextView pageBtn = <span class="keyword">new</span> TextView(getApplicationContext());</div><div class="line">pageBtn.setPadding(<span class="number">10</span> , <span class="number">20</span> , <span class="number">30</span> , <span class="number">40</span>);</div><div class="line">pageBtn.setTextSize(<span class="number">25</span>);</div><div class="line">LinearLayout.LayoutParams layoutParams = <span class="keyword">new</span> LinearLayout.LayoutParams(<span class="number">40</span> , <span class="number">40</span>);</div><div class="line">layoutParams.setMargins(<span class="number">10</span> , <span class="number">20</span> , <span class="number">30</span> , <span class="number">40</span>);</div><div class="line"></div><div class="line"><span class="comment">//在全部生成完毕后,添加至容器之前调整大小.</span></div><div class="line">AutoUtils.autoSize(pageBtn);</div><div class="line"></div><div class="line">pageBtnContainer.addView(pageBtn , layoutParams);</div></pre></td></tr></table></figure>
 
         </div>
     
