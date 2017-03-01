@@ -159,16 +159,14 @@
         
 
         <!-- Post Content -->
-        <h3 id="github上常见的徽章标签和进度条"><a href="#github上常见的徽章标签和进度条" class="headerlink" title="github上常见的徽章标签和进度条"></a>github上常见的徽章标签和进度条</h3><p>平时在上github的时候看到别人写的精美的README,我总是感到非常的羡慕.近来我也开始使用markdown写博客,看到之前有一些项目的README的开始部分总是会有例如</p>
-<p><div><br><img src="https://img.shields.io/github/release/qubyte/rubidium.svg" alt=""><img src="https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg" alt=""></div></p>
-<div>
-
+        <h3 id="github上常见的徽章标签和进度条"><a href="#github上常见的徽章标签和进度条" class="headerlink" title="github上常见的徽章标签和进度条"></a>github上常见的徽章标签和进度条</h3><p>平时在上github的时候看到别人写的精美的README,我总是感到非常的羡慕.近来我也开始使用markdown写博客,看到之前有一些项目的README的开始部分总是会有例如<br><img src="https://img.shields.io/github/release/qubyte/rubidium.svg" alt=""></p>
+<p><img src="https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg" alt=""></p>
 <p>这样的徽章样式的标签.</p>
 <p>甚至还有些文章会有<br><img src="http://progressed.io/bar/28?title=progress" alt=""></p>
 <p><img src="http://progressed.io/bar/91?title=done" alt=""><br>这样的进度条,简直炫酷.这是怎么做到的呢?</p>
 <h3 id="已有的标签小程序"><a href="#已有的标签小程序" class="headerlink" title="已有的标签小程序"></a>已有的标签小程序</h3><p>网上搜了一下,原来<a href="http://shields.io/" target="_blank" rel="external">http://shields.io/</a>可以提供徽章样式的标签生成,但是这个网站怎么用?貌似写的不太清楚,网上也没有详细一点的介绍微博,只能自己试验了一下.</p>
-<p>我的理解是这个网站提供了一套”标签小程序”,可以抓取一些动态的数据自动生成标签图片,比如github上项目的最新的release版本号,twitter的账号关注人数等等.网站的首页提供了很多现成的小程序例如</p>
-<p><img src="/image/20170301152451.png" alt=""></p>
+<p>我的理解这个网站提供了一批”标签小程序”,他们的作用是抓取一些动态的数据并自动生成标签图片.<br>比如抓取github上项目的最新的release版本号生成release标签,抓取twitter的账号关注人数生成关注标签等等.<br>使用这种标签能够保证每次刷新网页都会重新抓取数据,并且重新更新标签上的文字.这样就实现了动态变化的徽章标签.</p>
+<p>举例来说:<br><img src="/image/20170301152451.png" alt=""></p>
 <p>这一行的小程序功能就是用来展示某一个github项目最新的release版本号.</p>
 <p>点开你可以看到如下界面</p>
 <p><img src="/image/20170301152527.png" alt=""></p>
@@ -192,7 +190,7 @@
 <p>只要把URL中的数字换成自己想要的,就可以生成各种样式和颜色的进度条了.</p>
 <p>PS:<br>如过我们在写markdown的时候想为我们的徽章或者进度条添加点击跳转的超链接,可以使用超链接和图片的语法嵌套来写,具体可以参照markdown标准语法.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="string">![</span>](<span class="link">徽章/进度条URL</span>)](<span class="link">点击超链接</span>)</div></pre></td></tr></table></figure>
-</div>
+
     </div>
 
     
