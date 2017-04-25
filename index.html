@@ -181,8 +181,10 @@
 <li>验证SpecModel的合法性</li>
 <li>从SpecModel中生成Component。</li>
 </ul>
-<p></p><p></p>
 <h5 id="创建SpecModel"><a href="#创建SpecModel" class="headerlink" title="创建SpecModel"></a>创建SpecModel</h5><p>SpecModel是在编译时，由注解处理器(一个扫描和处理注解的javac工具)生成的.Litho的注解处理器将会扫描你的ComponentSpec中的方法,变量和注释,为每一个ComponentSpec创建SpecModel.<br>未来,我们将会支持使用其他方法创建SpecModel.举个例子:我们考虑支持直接在Android Studio/Intellij中创建SpecModel,这样可以允许我们不用build源码就可以生成Component.</p>
+<h5 id="SpecModel验证"><a href="#SpecModel验证" class="headerlink" title="SpecModel验证"></a>SpecModel验证</h5><p>SpecModel有一个方法叫做validate(),它返回一个包含SpecModelValidationError(SpecModel验证错误)的list.如果这个list为空,说明这个Spec是格式合法的,可以用它来创建一个合法的component.如果不是,这个list则会包含一系列需要在Component生成前修复的错误.</p>
+<h5 id="Component生成"><a href="#Component生成" class="headerlink" title="Component生成"></a>Component生成</h5><p>如果SpecModel验证步骤成功了,接着generate方法将会被调用,它将会生成一个Javapoet TypeSpec(用它能够很容易的创建一个Component的class 文件).</p>
+<h5 id="给你的工程设置代码生成器"><a href="#给你的工程设置代码生成器" class="headerlink" title="给你的工程设置代码生成器"></a>给你的工程设置代码生成器</h5><p>如果你根据【开始工作】中的说明设置了你的工程代码，那么代码生成器就被自动设置好了。</p>
 
         </div>
     
