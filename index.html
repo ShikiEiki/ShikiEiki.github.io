@@ -174,6 +174,14 @@
 <h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>Litho的首要使用场景为:具有复杂内容的RecyclerView.因为它甚至在具有复杂的item和多种类型的内容RecyclerView上也表现出了极好的滚动特性.这在使用传统的android view的情况下是非常具有挑战性的工作.</p>
 <p>你也可以因为Litho简单的声明式的API来选择采用Litho来构建UI,Litho的基于单向数据流函数式编程模型会在你的产品变得复杂的时候也很容易理解.</p>
 <p>高动态化的UI动画和复杂手势现在还很难用Litho实现,新的针对layout专场和手势的API将会很快推出.</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h3 id="代码生成器"><a href="#代码生成器" class="headerlink" title="代码生成器"></a>代码生成器</h3><p>正如在【编写Conponent】中写道的，Litho依赖代码生成器来从ComponentSpec生成Component.这个过程需要用到一个不可变的java对象——SpecModel，作为中间件。</p>
+<p>代码生成过程分为三个步骤：</p>
+<ul>
+<li>从ComponentSpec中生成一个SpecModel。</li>
+<li>验证SpecModel的合法性</li>
+<li>从SpecModel中生成Component。</li>
+</ul>
+<h2 id="创建SpecModel"><a href="#创建SpecModel" class="headerlink" title="创建SpecModel"></a>创建SpecModel</h2><p>SpecModel是在编译时，由注解处理器(一个扫描和处理注解的javac工具)生成的.Litho的注解处理器将会扫描你的ComponentSpec中的方法,变量和注释,为每一个ComponentSpec创建SpecModel.<br>未来,我们将会支持使用其他方法创建SpecModel.举个例子:我们考虑支持直接在Android Studio/Intellij中创建SpecModel,这样可以允许我们不用build源码就可以生成Component.</p>
 
         </div>
     
