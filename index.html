@@ -139,6 +139,50 @@
 
     <div class="post-header index">
         <h1 class="title">
+            <a href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译(四)/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译(四)
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-02</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Props"><a href="#Props" class="headerlink" title="Props"></a>Props</h3><p>Litho使用不可变的输入作为单向数据流提供给Component.Component使用<a href="https://facebook.github.io/react/" target="_blank" rel="external">React</a>中提出的名称props,作为它的输入.</p>
+<h5 id="定义和使用props"><a href="#定义和使用props" class="headerlink" title="定义和使用props"></a>定义和使用props</h5><p>一个给定component中的prop是指在你的spec方法中,所有使用@Prop注释标注的参数的集合.你可以把它作为@Prop的参数声明出来,以在所有的方法中访问它的值.</p>
+<p>在多个lifecycle方法中,我们可以定义和访问相同的prop.注释处理器会确保你在所有的spec方法中使用一致的prop类型和注释参数.</p>
+<p>以下面的Component Spec为例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnPrepare</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onPrepare</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop(optional = <span class="keyword">true</span>) String prop1) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnMount</span></div><div class="line">  <span class="function"><span class="keyword">static</span> SomeDrawable <span class="title">onMount</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      SomeDrawable convertDrawable,</div><div class="line">      @Prop(optional = <span class="keyword">true</span>) String prop1,</div><div class="line">      @Prop <span class="keyword">int</span> prop2) &#123;</div><div class="line">    <span class="keyword">if</span> (prop1 != <span class="keyword">null</span>) &#123;</div><div class="line">    	...</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>MyComponentSpec定义了两个Prop,一个String类型的Prop,名叫prop1,和一个int类型的prop,名叫prop2.prop1是可选的,它需要在所有定义它的方法中进行标注,否则注释处理器将会抛出一个异常.</p>
+<p>当生命周期方法被调用时,@Prop参数将保存component创建时从它们的父级传递过来的值(或者它们的默认值).</p>
+<p>Prop在LayoutSpec和MountSpec中定义和使用的方法都是一样的.</p>
+<h5 id="设置Prop"><a href="#设置Prop" class="headerlink" title="设置Prop"></a>设置Prop</h5><p>对每一个在spec中定义的独立的prop,注释处理器都会创建一个与prop名称相同的构造器模式的方法在Component的Builder中,用来把传入的参数设置到对应的prop上.</p>
+<p>你可以调用自动生成的Component Builder中的对应的方法传入参数来设置prop.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MyComponent.create(c)</div><div class="line">    .prop1(<span class="string">"My prop 1"</span>)</div><div class="line">    .prop2(<span class="number">256</span>)</div><div class="line">    .build();</div></pre></td></tr></table></figure>
+<h5 id="Prop的默认值"><a href="#Prop的默认值" class="headerlink" title="Prop的默认值"></a>Prop的默认值</h5><p>对可选的prop你可以省略设置它的value的动作,它会被自动设置为它这种类型在java中的默认值.你可能也会经常需要明确的定义component prop的默认值为你想要的值,而不是简单的使用java的默认值.</p>
+<p>你可以使用@PropDefault注释在Spec类中定义一个静态的成员变量作为prop的默认值.让我们为上面例子中prop定义一个默认值:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@PropDefault</span> <span class="keyword">static</span> <span class="keyword">final</span> String prop1 = <span class="string">"mydefaultvalue"</span>;</div><div class="line">  <span class="meta">@PropDefault</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> prop2 = -<span class="number">1</span>;</div><div class="line"></div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
             <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译(三)/">
                 Facebook出品的Android声明式开源新框架Litho文档翻译(三)
             </a>
@@ -676,6 +720,10 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译(四)/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译(三)/">Facebook出品的Android声明式开源新框</a>
             </li>
             
@@ -685,10 +733,6 @@
             
             <li>
                 <a class="footer-post" href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译(八)/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/04/25/Facebook出品的Android声明式开源新框架Litho文档翻译(一)/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>
@@ -702,11 +746,11 @@
     <ul>
         
         <li>
-            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
+            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
         </li>
         
         <li>
-            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
+            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
         </li>
         
         <li>
