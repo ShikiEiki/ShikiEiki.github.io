@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="努力进行各种研究...">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Dr.Fu">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="努力进行各种研究..." />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="FH01号自律型科学实验舱"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作 - FH01号自律型科学实验舱</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-27</span>
+            
+            <a href="#disqus_thread" class="comments">Kommentare</a>
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>欢迎转载,转载请标明出处.</p>
+<h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h4 id="gradle"><a href="#gradle" class="headerlink" title="gradle"></a>gradle</h4><h5 id="集成Litho至你的工程"><a href="#集成Litho至你的工程" class="headerlink" title="集成Litho至你的工程"></a>集成Litho至你的工程</h5><p>你可以通过在你的Gradle的build.gradle文件中添加以下代码来把Litho添加至你的Android工程中.<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">  <span class="comment">// Litho</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-core:0.2.0'</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-widget:0.2.0'</span></div><div class="line">  provided <span class="string">'com.facebook.litho:litho-annotations:0.2.0'</span></div><div class="line"></div><div class="line">  annotationProcessor <span class="string">'com.facebook.litho:litho-processor:0.2.0'</span></div><div class="line">  </div><div class="line">  <span class="comment">// SoLoader </span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.soloader:soloader:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 调试选项</span></div><div class="line">  debugCompile <span class="string">'com.facebook.litho:litho-stetho:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 集成Fresco的支持</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-fresco:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 供测试</span></div><div class="line">  testCompile <span class="string">'com.facebook.litho:litho-testing:0.2.0'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="Buck"><a href="#Buck" class="headerlink" title="Buck"></a>Buck</h4><p>你可以通过在你的Buck的BUCK文件中添加以下代码来把Litho添加至你的Android工程中.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">android_prebuilt_aar(</div><div class="line">    name = &quot;litho&quot;,</div><div class="line">    aar = &quot;:litho.aar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-core.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-core:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">prebuilt_jar(</div><div class="line">    name = &quot;litho-annotation&quot;,</div><div class="line">    binary_jar = &quot;:litho-annotation.jar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-processor.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-processor:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">prebuilt_jar(</div><div class="line">    name = &quot;litho-processor&quot;,</div><div class="line">    binary_jar = &quot;:litho-processor.jar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-annotation.jar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-annotation:jar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">android_prebuilt_aar(</div><div class="line">    name = &quot;litho-widget&quot;,</div><div class="line">    aar = &quot;:litho-widget.aar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-widget.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-widget:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">litho_android_library(</div><div class="line">    ...</div><div class="line">    # Your target here</div><div class="line">    ...</div><div class="line">    annotation_processor_deps = [</div><div class="line">        &quot;:litho-annotation&quot;,</div><div class="line">        &quot;:litho-processor&quot;,</div><div class="line">    ],</div><div class="line">    annotation_processors = [</div><div class="line">        &quot;com.facebook.litho.processor.ComponentsProcessor&quot;,</div><div class="line">    ],</div><div class="line">    deps = [</div><div class="line">        &quot;:litho&quot;,</div><div class="line">        &quot;:litho-widget&quot;,</div><div class="line">        ...</div><div class="line">    ]</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<h5 id="测试集成情况"><a href="#测试集成情况" class="headerlink" title="测试集成情况"></a>测试集成情况</h5><p>你可以通过添加一个由Litho创建的view至activity来测试集成情况</p>
+<p>首先,初始化SoLoader.Litho依赖SoLoader来加载底层布局引擎所需的本地库.在Application中进行这个操作比较合适.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[MyApplication.java]</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate();</div><div class="line">    </div><div class="line">    SoLoader.init(<span class="keyword">this</span>, <span class="keyword">false</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后,添加一个预定义的Litho Text组件至activity来显示”Hello world”.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[MyActivity.java]</div><div class="line"><span class="keyword">import</span> com.facebook.litho.ComponentContext;</div><div class="line"><span class="keyword">import</span> com.facebook.litho.LithoView;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">    </div><div class="line">    <span class="keyword">final</span> ComponentContext c = <span class="keyword">new</span> ComponentContext(<span class="keyword">this</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> LithoView lithoView = LithoView.create(</div><div class="line">    	<span class="keyword">this</span> <span class="comment">/* context */</span>, </div><div class="line">    	Text.create(c)</div><div class="line">            .text(<span class="string">"Hello, World!"</span>)</div><div class="line">            .textSizeDip(<span class="number">50</span>)</div><div class="line">            .build());</div><div class="line">    	</div><div class="line">    setContentView(lithoView);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在,当你运行app的时候,你就可以看到”Hello World”显示在屏幕上.</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/Android/">#Android</a> <a href="/tags/实用库/">#实用库</a> <a href="/tags/Litho/">#Litho</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    欢迎访问我的博客,本博客使用github page和Hexo搭建,技术小白自我进化中,很乐意讨论技术问题,欢迎给我发邮件~~
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译-Props/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/Android知识/">Android知识</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/ShikiEiki">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:515073770@qq.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

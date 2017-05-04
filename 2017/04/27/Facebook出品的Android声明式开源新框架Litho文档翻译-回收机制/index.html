@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译(一)"/>
+        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制"/>
     
 
     <!--Open Graph Description-->
@@ -44,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>Facebook出品的Android声明式开源新框架Litho文档翻译(一) - FH01号自律型科学实验舱</title>
+    <title>Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制 - FH01号自律型科学实验舱</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
@@ -136,13 +136,13 @@
 
     <div class="post-header">
         <h1 class="title">
-            <a href="/2017/04/25/Facebook出品的Android声明式开源新框架Litho文档翻译(一)/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译(一)
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制
             </a>
         </h1>
         <div class="post-info">
             
-                <span class="date">2017-04-25</span>
+                <span class="date">2017-04-27</span>
             
             <a href="#disqus_thread" class="comments">Kommentare</a>
             
@@ -160,21 +160,13 @@
 
         <!-- Post Content -->
         <p>欢迎转载,转载请标明出处.</p>
-<p>今天逛github发现facebook开源了一个新框架Litho,大概看了一下介绍,这是一个声明式UI框架,最初是用于为RecyclerView生成复杂的可滚动的UI而做的.<br>听起来很牛逼啊,网上搜了一下,暂时还没有中文的文档什么的,所以为了提升英语水平我也来边学边翻译吧,如果翻译有问题的地方,欢迎指出.</p>
-<h1 id="介绍Lithos"><a href="#介绍Lithos" class="headerlink" title="介绍Lithos"></a>介绍Lithos</h1><h3 id="Litho是什么"><a href="#Litho是什么" class="headerlink" title="Litho是什么?"></a>Litho是什么?</h3><p>Litho是一个为在Android系统上高效的构建用户界面(UI)的声明式框架.它允许你通过使用一套基于Java注解的简单的API来编写最优化的Android views.这个框架主要是被设计用来实现在RecyclerView上构建复杂的可滚动的UI的.</p>
-<p>通过Litho,你可以使用Litho的Components(组件)代替传统的Android Views来构建UI.一个Component本质上是一个带有不可变输入(我们称之为props)并且返回component hierachy(组件层级结构)来描述UI的方法.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop String name) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Text.create(c)</div><div class="line">        .text(<span class="string">"Hello, "</span> + name)</div><div class="line">        .textSizeRes(R.dimen.my_text_size)</div><div class="line">        .textColor(Color.BLACK)</div><div class="line">        .withLayout()</div><div class="line">        .paddingDip(ALL, <span class="number">10</span>)</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>你只需要简单的声明你想要展示的元素,然后Litho就会自动的渲染他们,并且以一种高效的方式——使用后台线程计算布局参数、自动扁平化层级结构、还有使用增量式挂载机制处理复杂的component。</p>
-<p>我们的【教程】可以指导你一步一步的在你的APP里使用Litho，或者你也可以阅读【快速开始】来学习如何编写和使用Litho的Component。</p>
-<h3 id="编写Litho的动机"><a href="#编写Litho的动机" class="headerlink" title="编写Litho的动机"></a>编写Litho的动机</h3><p>在Android上构建一个列表式界面相当的简单，虽然大多数app要更加复杂一点，但是大体上你只需要编写一个列表中Item的layout，然后再将其挂载到RecytclerView的adapter上去就完成了。</p>
-<p>当你的adapter拥有许多类型的view的时候，你就不得不去考虑一种更健壮的方法来回收view。如果你有很多很多种类型的view时，每次一个新的类型的view被显示的时候，RecyclerView都会不断的inflate新的view，这很可能导致滚动时帧数的下降。</p>
-<p>你可以通过回收和重复利用,在多个item之前共享一些view实例,来达到减少view的类型的目的,但是随着你添加了更多的逻辑到你的产品中去,bug往往会越来越容易发生.</p>
-<p>如果列表的item比较复杂,你很可能会优化你的layouts.对于简单的情况,你可以直接使用Android库里的layout来避免许多的”坑”,但是情况往往比较复杂.在这种情况下,一个通用的做法是特别为你的需求定制特殊的Custom view(客制化view).使用Custom view可以有效的提升UI的效率,但是由于它们会增添项目的复杂度并且维护成本也很高,所以会拖慢项目进度.</p>
-<p>你也可以通过分解一个复杂的item为多个小的item,来把滚动时计算布局和绘制每一帧的花费的时间分解开来,从而优化RecyclerView的item.这种方法在一些情况下效果不错,但是它通常会导致adapter中view类型的爆炸式增长,并且有可能仍然需要花费代价去创建Custom Views,这就依然导致了我们上面所讲到的问题.</p>
-<p>Litho主要工作就是把优化RecyclerView的复杂工作打包起来.在使用Litho时,没有view类型的区别,你可以在后台线程中提前、无缝的构建你的UI,并且自动地把他们渲染成更加扁平化的层级结构。这些梦幻的特性，你都可以免费的通过一套非常简单的编程模式来获得。</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>Litho的首要使用场景为:具有复杂内容的RecyclerView.因为它甚至在具有复杂的item和多种类型的内容RecyclerView上也表现出了极好的滚动特性.这在使用传统的android view的情况下是非常具有挑战性的工作.</p>
-<p>你也可以因为Litho简单的声明式的API来选择采用Litho来构建UI,Litho的基于单向数据流函数式编程模型会在你的产品变得复杂的时候也很容易理解.</p>
-<p>高动态化的UI动画和复杂手势现在还很难用Litho实现,新的针对layout专场和手势的API将会很快推出.</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h3 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h3><p>设备屏幕通常以每秒60帧的速率刷新。为了能提供流畅的UI效果，应用程序需要能够每16ms一帧的速度持续渲染我们的UI。如果达不到这个时间标准，就会导致丢帧和不佳的用户体验。随着UI变得越来越复杂，在限制的时间内越来越难以完成所有的渲染工作。特别是在动态滚动的界面上,因为新的UI块的不断被添加到屏幕上，完成渲染就变得尤其有挑战性。<br>Android使用RecyclerView解决了这个问题，RecyclerView是一个动态UI容器，可以通过创建足够的视图来填充屏幕，然后在UI滚动中回收和重用它们，以显示大量数据中的元素。</p>
+<p><img src="/image/20170426171157.gif" alt=""></p>
+<p>RecyclerView支持异构的内容的显示。为此，它会根据item的不同的类型将其保留在不同的池中。虽然这个方法在简单情况下工作正常，但是对于具有许多不同item类型的UI，这种方法已经被证明是有问题的。在具有许多item类型的场景中，如果一个item随着滚动事件进入视窗,则它这种类型的item是RecyclerView第一次显示可能性非常大。如果发生这种情况，RecyclerView必须为这个item进行内存分配。在短短的16ms中,RecyclerView必须为新的item进行绑定，测量和布局工作。</p>
+<p><img src="/image/20170426172051.gif" alt=""></p>
+<h5 id="Litho增量式回收"><a href="#Litho增量式回收" class="headerlink" title="Litho增量式回收"></a>Litho增量式回收</h5><p>我们希望为Litho建立一个更具可扩展性和更高效率的回收系统，同时我们希望从API中消除item类型的复杂性。在Litho中，布局的描述与实际用于在屏幕上呈现UI的Views和Drawable完全不相关。这意味着当我们需要在屏幕上放置一个新的RecyclerView item时，我们已经完全知道了该item的内容和该item与其余UI的相对位置。这允许Litho完全摆脱item类型的概念。在recyclerview滚动时,比起重复利用view来表示item,我们选择了增量式的利用例如Text或者Image这样的构建块.这种做法在传统的Android view上是不可能的，因为在传统的Android中,我们需要在完整的view tree上进行布局计算,当我们算出所有view的位置时，一切都已经被实例化了。</p>
+<p><img src="/image/20170426172130.gif" alt=""></p>
+<p>回收利用像Text这样的”原始item”能够大大增加应用程序的内存效率，比如你可以回收list中的任何一个Text的给其他需要显示的Text来用。最重要的是，由于我们的布局是提前计算的，所以我们能够确切地知道一个新的item什么时候会变得可见，这意味着，我们可以在屏幕上引入非常少量的”原始item”来显示每一帧,而不是在一帧中绑定并且绘制一个大的view tree。</p>
 
     </div>
 
@@ -224,11 +216,11 @@
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译(三)/">Facebook出品的Android声明式开源新框</a>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译(二)/">Facebook出品的Android声明式开源新框</a>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>

@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译(三)"/>
+        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs"/>
     
 
     <!--Open Graph Description-->
@@ -44,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>Facebook出品的Android声明式开源新框架Litho文档翻译(三) - FH01号自律型科学实验舱</title>
+    <title>Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs - FH01号自律型科学实验舱</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
@@ -136,8 +136,8 @@
 
     <div class="post-header">
         <h1 class="title">
-            <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译(三)/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译(三)
+            <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs
             </a>
         </h1>
         <div class="post-info">
@@ -159,17 +159,8 @@
         
 
         <!-- Post Content -->
-        <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a>Layout Specs</h3><p>Layout Spec在逻辑上等同于Android的View的组合.它简单的把一些已经存在的component组合到一个不可变的布局树中.</p>
-<p>实现一个layout spec非常简单:你只需要写一个标注为@OnCreateLayout的方法,并且让它返回一个不可变的<a href="">ComponentLayout</a>对象的树.</p>
-<p>让我们从一个简单的例子开始:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop <span class="keyword">int</span> color,</div><div class="line">      @Prop String title) &#123;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> Row.create(c)</div><div class="line">          .alignItems(CENTER)</div><div class="line">          .child(</div><div class="line">              SolidColor.create(c)</div><div class="line">                  .colorRes(color)</div><div class="line">                  .withLayout()</div><div class="line">                  .widthDip(<span class="number">40</span>)</div><div class="line">                  .heightDip(<span class="number">40</span>))</div><div class="line">          .child(</div><div class="line">              Text.create(c)</div><div class="line">                  .text(title)</div><div class="line">                  .textSizeRes(R.dimen.my_text_size)</div><div class="line">                  .withLayout()</div><div class="line">                  .flexGrow(<span class="number">1f</span>))</div><div class="line">          .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>正如你所见,layout spec类使用@LayoutSpec注释.</p>
-<p>用@OnCreateLayout注释标注的方法必须以<a href="">ComponentContext</a>作为第一个参数,并且在它后面有以@Prop标注的其他参数.注释处理器将会在编译的时候对它们和其他API的不变性进行验证.</p>
-<p>在上面的示例中,布局树中有一个根容器,容器中有两个水平堆叠(Row.create)且垂直居中(Align.CENTER)的子节点.</p>
-<p>第一个子节点是一个<a href="">SolidColor</a> component,它拥有一个colorRes的Prop和40dp的宽和高.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SolidColor.create(c)</div><div class="line">    .uri(imageUri)</div><div class="line">    .withLayout()</div><div class="line">    .width(<span class="number">40</span>)</div><div class="line">    .height(<span class="number">40</span>)</div></pre></td></tr></table></figure>
-<p>第二个子节点是一个Text Component,它拥有一个名叫text的prop,并且使用grow(1f)填充了Myconponent中的剩余的水平空间(等同于Android LinearLayout中的layoutWeight).文字大小实在my_text_size尺寸文件中定义的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Text.create(c)</div><div class="line">    .text(title)</div><div class="line">    .textSizeRes(R.dimen.my_text_size)</div><div class="line">    .withLayout()</div><div class="line">    .grow(<span class="number">1f</span>)</div></pre></td></tr></table></figure></p>
-<p>你可以查看完整的<a href="">Yoga</a>文档来获取所有框架开放出的布局特性.</p>
-<h3 id="Mount-Specs"><a href="#Mount-Specs" class="headerlink" title="Mount Specs"></a>Mount Specs</h3><p>一个Mount Spec定义了一个可以渲染Views或者drawables的component.</p>
+        <p>欢迎转载,转载请标明出处.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Mount-Specs"><a href="#Mount-Specs" class="headerlink" title="Mount Specs"></a>Mount Specs</h3><p>一个Mount Spec定义了一个可以渲染Views或者drawables的component.</p>
 <p>Mount Spec只有在你需要把自己的view/drawable集成到Component 框架中的时候才应当被创建.这里的Mount的意思是指布局树中所有的component执行的操作,用于提取它们的渲染状态(一个View或者一个Drawable)以供显示.</p>
 <p>Mount spec类应该使用@MountSpec去注释,并且至少实现一个@OnCreateMountContent方法.下方其他列出的方法是可选择实现的.</p>
 <p>mount spec component的生命周期如下:</p>
@@ -254,11 +245,11 @@
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译(三)/">Facebook出品的Android声明式开源新框</a>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译(二)/">Facebook出品的Android声明式开源新框</a>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>
