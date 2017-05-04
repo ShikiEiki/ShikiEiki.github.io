@@ -139,8 +139,41 @@
 
     <div class="post-header index">
         <h1 class="title">
-            <a href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译(四)/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译(四)
+            <a href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-04</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<p>今天逛github发现facebook开源了一个新框架Litho,大概看了一下介绍,这是一个声明式UI框架,最初是用于为RecyclerView生成复杂的可滚动的UI而做的.<br>听起来很牛逼啊,网上搜了一下,暂时还没有中文的文档什么的,所以为了提升英语水平我也来边学边翻译吧,如果翻译有问题的地方,欢迎指出.</p>
+<p>#Litho 官方文档翻译</p>
+<h3 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h3><h5 id="Litho-是什么"><a href="#Litho-是什么" class="headerlink" title="Litho 是什么?"></a><a href="">Litho 是什么?</a></h5><h5 id="编写动机"><a href="#编写动机" class="headerlink" title="编写动机"></a><a href="">编写动机</a></h5><h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a><a href="">使用</a></h5>
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译-Props/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译--Props
             </a>
         </h1>
         <div class="post-info">
@@ -172,6 +205,14 @@
 <h5 id="Prop的默认值"><a href="#Prop的默认值" class="headerlink" title="Prop的默认值"></a>Prop的默认值</h5><p>对可选的prop你可以省略设置它的value的动作,它会被自动设置为它这种类型在java中的默认值.你可能也会经常需要明确的定义component prop的默认值为你想要的值,而不是简单的使用java的默认值.</p>
 <p>你可以使用@PropDefault注释在Spec类中定义一个静态的成员变量作为prop的默认值.让我们为上面例子中prop定义一个默认值:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@PropDefault</span> <span class="keyword">static</span> <span class="keyword">final</span> String prop1 = <span class="string">"mydefaultvalue"</span>;</div><div class="line">  <span class="meta">@PropDefault</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> prop2 = -<span class="number">1</span>;</div><div class="line"></div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="资源类型"><a href="#资源类型" class="headerlink" title="资源类型"></a>资源类型</h5><p>当创建布局的时候,经常会使用到Android资源系统中的值,例如dimension,color,string等等.Component框架提供了一个非常方便的方法使用注释来设置Android资源系统里的值到prop中.</p>
+<p>让我们看一个简单的例子:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      LayoutContext context,</div><div class="line">      @Prop CharSequence someString,</div><div class="line">      @Prop <span class="keyword">int</span> someSize,</div><div class="line">      @Prop <span class="keyword">int</span> someColor) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在上面的例子中,MyComponent拥有几个prop,它们预计会被设置为一个代表color的integer(someColor),一个代表像素的dimension(someSize)和一个String(someString).通常的,你需要使用资源的值来设置它们:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Resources res = context.getResources();</div><div class="line"></div><div class="line">MyComponent.create(c)</div><div class="line">    .someString(res.getString(R.string.my_string))</div><div class="line">    .someSize(res.getDimensionPixelSize(R.dimen.my_dimen))</div><div class="line">    .someColor(res.getColor(R.color.my_color))</div></pre></td></tr></table></figure></p>
+<p>而component 框架允许你使用资源类型来注释你的prop,以便你的component builder可以生成更加方便的方法来供你直接使用资源的值.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      LayoutContext context,</div><div class="line">      @Prop(resType = ResType.STRING) CharSequence someString,</div><div class="line">      @<span class="title">Prop</span><span class="params">(resType = ResType.DIMEN_SIZE)</span> <span class="keyword">int</span> someSize,</div><div class="line">      @<span class="title">Prop</span><span class="params">(resType = ResType.COLOR)</span> <span class="keyword">int</span> someColor) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当你做了以上的更改后,MyComponent的builder将会根据被注释的prop的资源类型自动包含响应的Res,Attr,Dip,Px方法.因此你就可以像下面这么做:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">MyComponent.create(c)</div><div class="line">    .someStringRes(R.string.my_string)</div><div class="line">    .someSizePx(<span class="number">10</span>)</div><div class="line">    .someSizeDip(<span class="number">10</span>)</div><div class="line">    .someColorAttr(android.R.attr.textColorTertiary)</div></pre></td></tr></table></figure></p>
+<p>其他支持的资源类型包括 ResType.STRING_ARRAY, ResType.INT, ResType.INT_ARRAY, ResType.BOOL, ResType.COLOR, ResType.DIMEN_OFFSET, ResType.FLOAT, and ResType.DRAWABLE.</p>
+<h5 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h5><p>Component中的prop是只读的.当Component的父级创建Component时传递给它的prop响应的值之后,在component的生命周期中,它们的值就不能被改变了.如果prop的值必须被更新,那么它的父级创建一个新的Component并且传递将新的值传递给它的prop.prop对象必须保证是不可变的.因为在<a href="">后台布局计算</a>中prop可能被多个线程同时访问.Prop的不可变性能够确保在你的component层级中不会出现线程安全问题.</p>
 
         </div>
     
@@ -720,7 +761,11 @@
         <ul>
             
             <li>
-                <a class="footer-post" href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译(四)/">Facebook出品的Android声明式开源新框</a>
+                <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译-Props/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
@@ -729,10 +774,6 @@
             
             <li>
                 <a class="footer-post" href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译(二)/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译(八)/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="努力进行各种研究...">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Dr.Fu">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译--Props"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="努力进行各种研究..." />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="FH01号自律型科学实验舱"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Facebook出品的Android声明式开源新框架Litho文档翻译--Props - FH01号自律型科学实验舱</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译-Props/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译--Props
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-02</span>
+            
+            <a href="#disqus_thread" class="comments">Kommentare</a>
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Props"><a href="#Props" class="headerlink" title="Props"></a>Props</h3><p>Litho使用不可变的输入作为单向数据流提供给Component.Component使用<a href="https://facebook.github.io/react/" target="_blank" rel="external">React</a>中提出的名称props,作为它的输入.</p>
+<h5 id="定义和使用props"><a href="#定义和使用props" class="headerlink" title="定义和使用props"></a>定义和使用props</h5><p>一个给定component中的prop是指在你的spec方法中,所有使用@Prop注释标注的参数的集合.你可以把它作为@Prop的参数声明出来,以在所有的方法中访问它的值.</p>
+<p>在多个lifecycle方法中,我们可以定义和访问相同的prop.注释处理器会确保你在所有的spec方法中使用一致的prop类型和注释参数.</p>
+<p>以下面的Component Spec为例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnPrepare</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onPrepare</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop(optional = <span class="keyword">true</span>) String prop1) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnMount</span></div><div class="line">  <span class="function"><span class="keyword">static</span> SomeDrawable <span class="title">onMount</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      SomeDrawable convertDrawable,</div><div class="line">      @Prop(optional = <span class="keyword">true</span>) String prop1,</div><div class="line">      @Prop <span class="keyword">int</span> prop2) &#123;</div><div class="line">    <span class="keyword">if</span> (prop1 != <span class="keyword">null</span>) &#123;</div><div class="line">    	...</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>MyComponentSpec定义了两个Prop,一个String类型的Prop,名叫prop1,和一个int类型的prop,名叫prop2.prop1是可选的,它需要在所有定义它的方法中进行标注,否则注释处理器将会抛出一个异常.</p>
+<p>当生命周期方法被调用时,@Prop参数将保存component创建时从它们的父级传递过来的值(或者它们的默认值).</p>
+<p>Prop在LayoutSpec和MountSpec中定义和使用的方法都是一样的.</p>
+<h5 id="设置Prop"><a href="#设置Prop" class="headerlink" title="设置Prop"></a>设置Prop</h5><p>对每一个在spec中定义的独立的prop,注释处理器都会创建一个与prop名称相同的构造器模式的方法在Component的Builder中,用来把传入的参数设置到对应的prop上.</p>
+<p>你可以调用自动生成的Component Builder中的对应的方法传入参数来设置prop.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MyComponent.create(c)</div><div class="line">    .prop1(<span class="string">"My prop 1"</span>)</div><div class="line">    .prop2(<span class="number">256</span>)</div><div class="line">    .build();</div></pre></td></tr></table></figure>
+<h5 id="Prop的默认值"><a href="#Prop的默认值" class="headerlink" title="Prop的默认值"></a>Prop的默认值</h5><p>对可选的prop你可以省略设置它的value的动作,它会被自动设置为它这种类型在java中的默认值.你可能也会经常需要明确的定义component prop的默认值为你想要的值,而不是简单的使用java的默认值.</p>
+<p>你可以使用@PropDefault注释在Spec类中定义一个静态的成员变量作为prop的默认值.让我们为上面例子中prop定义一个默认值:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@PropDefault</span> <span class="keyword">static</span> <span class="keyword">final</span> String prop1 = <span class="string">"mydefaultvalue"</span>;</div><div class="line">  <span class="meta">@PropDefault</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> prop2 = -<span class="number">1</span>;</div><div class="line"></div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="资源类型"><a href="#资源类型" class="headerlink" title="资源类型"></a>资源类型</h5><p>当创建布局的时候,经常会使用到Android资源系统中的值,例如dimension,color,string等等.Component框架提供了一个非常方便的方法使用注释来设置Android资源系统里的值到prop中.</p>
+<p>让我们看一个简单的例子:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      LayoutContext context,</div><div class="line">      @Prop CharSequence someString,</div><div class="line">      @Prop <span class="keyword">int</span> someSize,</div><div class="line">      @Prop <span class="keyword">int</span> someColor) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在上面的例子中,MyComponent拥有几个prop,它们预计会被设置为一个代表color的integer(someColor),一个代表像素的dimension(someSize)和一个String(someString).通常的,你需要使用资源的值来设置它们:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Resources res = context.getResources();</div><div class="line"></div><div class="line">MyComponent.create(c)</div><div class="line">    .someString(res.getString(R.string.my_string))</div><div class="line">    .someSize(res.getDimensionPixelSize(R.dimen.my_dimen))</div><div class="line">    .someColor(res.getColor(R.color.my_color))</div></pre></td></tr></table></figure></p>
+<p>而component 框架允许你使用资源类型来注释你的prop,以便你的component builder可以生成更加方便的方法来供你直接使用资源的值.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      LayoutContext context,</div><div class="line">      @Prop(resType = ResType.STRING) CharSequence someString,</div><div class="line">      @<span class="title">Prop</span><span class="params">(resType = ResType.DIMEN_SIZE)</span> <span class="keyword">int</span> someSize,</div><div class="line">      @<span class="title">Prop</span><span class="params">(resType = ResType.COLOR)</span> <span class="keyword">int</span> someColor) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当你做了以上的更改后,MyComponent的builder将会根据被注释的prop的资源类型自动包含响应的Res,Attr,Dip,Px方法.因此你就可以像下面这么做:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">MyComponent.create(c)</div><div class="line">    .someStringRes(R.string.my_string)</div><div class="line">    .someSizePx(<span class="number">10</span>)</div><div class="line">    .someSizeDip(<span class="number">10</span>)</div><div class="line">    .someColorAttr(android.R.attr.textColorTertiary)</div></pre></td></tr></table></figure></p>
+<p>其他支持的资源类型包括 ResType.STRING_ARRAY, ResType.INT, ResType.INT_ARRAY, ResType.BOOL, ResType.COLOR, ResType.DIMEN_OFFSET, ResType.FLOAT, and ResType.DRAWABLE.</p>
+<h5 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h5><p>Component中的prop是只读的.当Component的父级创建Component时传递给它的prop响应的值之后,在component的生命周期中,它们的值就不能被改变了.如果prop的值必须被更新,那么它的父级创建一个新的Component并且传递将新的值传递给它的prop.prop对象必须保证是不可变的.因为在<a href="">后台布局计算</a>中prop可能被多个线程同时访问.Prop的不可变性能够确保在你的component层级中不会出现线程安全问题.</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/Android/">#Android</a> <a href="/tags/实用库/">#实用库</a> <a href="/tags/Litho/">#Litho</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    欢迎访问我的博客,本博客使用github page和Hexo搭建,技术小白自我进化中,很乐意讨论技术问题,欢迎给我发邮件~~
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译-Props/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译(三)/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译(二)/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/Android知识/">Android知识</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/ShikiEiki">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:515073770@qq.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
