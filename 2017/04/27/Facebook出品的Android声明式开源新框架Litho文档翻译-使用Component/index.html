@@ -164,6 +164,7 @@
 <p>你可以通过以下的代码制定一个LithoView来渲染一个Component.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component component = MyComponent.create()</div><div class="line">    .title(<span class="string">"My title"</span>)</div><div class="line">    .imageUri(Uri.parse(<span class="string">"http://example.com/myimage"</span>)</div><div class="line">    .build();</div><div class="line">LithoView view = LithoView.create(context, component);</div></pre></td></tr></table></figure></p>
 <p>在这个例子中,MyComponent将被托管给LithoView,你可以在你的程序中像使用一个普通的Android View一样去使用这个LithoView.你可以在<a href="">教程</a>里看到如何在一个Acitivity中使用这个LithoView.</p>
 <p>重要提醒:示例中的LithoView,如果你在你的View层级中直接使用,将会在主线程中同步的执行布局任务.有关在主线程之外执行布局任务的更多信息,请参阅<a href="">异步布局</a>.</p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
 
     </div>
 
