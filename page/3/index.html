@@ -20,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="如何使用github和Hexo搭建个人博客"/>
+        <meta property="og:title" content="FH01号自律型科学实验舱"/>
     
 
     <!--Open Graph Description-->
@@ -33,7 +33,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="article" />
+        <meta property="og:type" content="website" />
     
 
     <!--Page Cover-->
@@ -44,7 +44,7 @@
 
     <!-- Title -->
     
-    <title>如何使用github和Hexo搭建个人博客 - FH01号自律型科学实验舱</title>
+    <title>page - FH01号自律型科学实验舱</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
@@ -127,14 +127,75 @@
     <div class="logo">
         <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
+            <h1 id="main-title" class="title">FH01号自律型科学实验舱</h1>
+        
     </div>
 </header>
 
         <section class="main">
             
+                
 <div class="post">
 
-    <div class="post-header">
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/02/28/一个好用的Android比例自动适配的库/">
+                一个好用的Android比例自动适配的库
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-02-28</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>今天刷github的时候发现一个鸿神写的很牛逼的适配库——AndroidAutoLayout.<br>刚好公司需要适配不同大小的屏幕,就简单试用了一下,感觉不错.集成简单,支持的控件广泛,使用灵活,虽然已经是15年写的了,但是现在用起来也没有发现什么冲突和崩溃.所以写到博客上推荐给大家.</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>这个库实现的最方便的功能是:我们拿到UI部门给出的以px为单位标注的设计图后,直接照抄上面的px尺寸就能写出一套适配于所有分辨率的xml layout.不仅免去了对着设计图把px转成dp的麻烦,而且也不用为不同的屏幕编写多套layout.很有一套UI打遍天下的感觉.<br>而且使用这个库理论上完全可以使用一个FrameLayout,里面的view使用margin定位,不用嵌套就能完成UI,对UI效率也有很大提升.</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>简单学习了一下源码,这个库的核心思想是,事先按照设计图设定好设计图的宽高(design_width/design_height),然后把设计图上所有控件的px尺寸按原单位px填入xml文件中,最终这个库会根据设计图总体尺寸和控件尺寸,算出控件在设计图上占的宽高比,再根据实际屏幕大小动态放大或缩小控件以保证控件在实际屏幕上占的比例和在设计图上占的比例一致.</p>
+<p>这种按比例缩放的方法不仅可以用在控件本身的大小上,也可以同理应用到控件的margin/padding/textSize等跟大小相关的属性上,统一缩放以后,在不同的屏幕上显示的效果就都跟设计图上一致了.</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>1.首先添加库引用.</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.zhy:autolayout:1.4.5'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>2.在项目的AndroidManifest中注明设计稿的尺寸。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"design_width"</span> <span class="attr">android:value</span>=<span class="string">"768"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"design_height"</span> <span class="attr">android:value</span>=<span class="string">"1280"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>3.界面的改动.</p>
+<ul>
+<li>Activity界面的用法</li>
+</ul>
+<p>让Activity继承AutoLayoutActivity</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AutoLayoutActivity</span> </span>&#123;</div><div class="line"></div><div class="line">.......</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>Fragment界面的用法</li>
+</ul>
+<p>在onCreateView生成返回生成的view之前使用AutoUtils重新计算view的大小(一定要在对view的全部处理完成后再调整大小).</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Nullable</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">	View view = inflater.inflate(.......);</div><div class="line">	.........</div><div class="line">	.........</div><div class="line">	AutoUtils.autoSize(view);</div><div class="line">	<span class="keyword">return</span> view;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>动态生成的view的用法</li>
+</ul>
+<p>以上两种都是对xml中写好的静态的layout进行大小适配的用法.如果需要动态生成view,比如生成页码按钮,添加到页码容器中,需要在生成结束后,添加到容器之前调用AutoUtils进行大小调整.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//动态生成pageBtn,并且动态设置宽高间隔等</span></div><div class="line">TextView pageBtn = <span class="keyword">new</span> TextView(getApplicationContext());</div><div class="line">pageBtn.setPadding(<span class="number">10</span> , <span class="number">20</span> , <span class="number">30</span> , <span class="number">40</span>);</div><div class="line">pageBtn.setTextSize(<span class="number">25</span>);</div><div class="line">LinearLayout.LayoutParams layoutParams = <span class="keyword">new</span> LinearLayout.LayoutParams(<span class="number">40</span> , <span class="number">40</span>);</div><div class="line">layoutParams.setMargins(<span class="number">10</span> , <span class="number">20</span> , <span class="number">30</span> , <span class="number">40</span>);</div><div class="line"></div><div class="line"><span class="comment">//在全部生成完毕后,添加至容器之前调整大小.</span></div><div class="line">AutoUtils.autoSize(pageBtn);</div><div class="line"></div><div class="line">pageBtnContainer.addView(pageBtn , layoutParams);</div></pre></td></tr></table></figure>
+<p>做完之后,记得把dp换成px,大小换成跟设计图上标注的一样的px值.<br>集成完毕,适配完成,就这么简单~</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>感谢张鸿阳大神提供这么好用的库.</p>
+<p><a href="https://github.com/hongyangAndroid/AndroidAutoLayout" target="_blank" rel="external">AndroidAutoLayout的github</a><br><a href="http://blog.csdn.net/lmj623565791/article/details/49990941" target="_blank" rel="external">鸿神写的AutoLayout的介绍文章</a><br><a href="https://github.com/hongyangAndroid/AndroidAutoLayout/blob/master/README.md" target="_blank" rel="external">AndroidAutoLayout的项目介绍</a></p>
+<p>以上介绍中还附上了许多进阶用法,学习中…</p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
         <h1 class="title">
             <a href="/2017/02/23/如何使用gitHub和Hexo搭建个人博客/">
                 如何使用github和Hexo搭建个人博客
@@ -144,7 +205,7 @@
             
                 <span class="date">2017-02-23</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            
             
                 <span class="category">
                     <a href="/categories/Web前端知识/">Web前端知识</a>
@@ -153,13 +214,9 @@
         </div>
     </div>
 
-    <div class="content">
-
-        <!-- Gallery -->
-        
-
-        <!-- Post Content -->
-        <h2 id="为什么要写个人博客"><a href="#为什么要写个人博客" class="headerlink" title="为什么要写个人博客?"></a>为什么要写个人博客?</h2><p>这一阵子是项目间隙,略闲,之前的项目中学到了很多东西,一直没有时间整理沉淀,现在终于有时间了,列了个计划打算把各种遇到问题和解决经验沉淀到文字里,方便自己今后查看,同时也可以分享给别人,利人利己.</p>
+    
+        <div class="content">
+            <h2 id="为什么要写个人博客"><a href="#为什么要写个人博客" class="headerlink" title="为什么要写个人博客?"></a>为什么要写个人博客?</h2><p>这一阵子是项目间隙,略闲,之前的项目中学到了很多东西,一直没有时间整理沉淀,现在终于有时间了,列了个计划打算把各种遇到问题和解决经验沉淀到文字里,方便自己今后查看,同时也可以分享给别人,利人利己.</p>
 <p>之前工作之余有些零碎经验都是写到网易云笔记之类的笔记应用里,这样虽然比较方便,但是不分享的话别人就不能看,不如博客这种形式,谁都可以搜到,更加便于传播.而且作为一个码农,拥有一个高大上的技术博客,也是一件高逼格的事不是吗 ^_^</p>
 <h2 id="为什么要自己搭建博客系统"><a href="#为什么要自己搭建博客系统" class="headerlink" title="为什么要自己搭建博客系统?"></a>为什么要自己搭建博客系统?</h2><p>想要写一个技术博客,有很多种途径,比较快速简单的方法是找一个像CSDN blog这样的博客平台,申请一个账号直接就可以写,但是总觉得作为程序员,这样还不够酷.那么为什么尝试不自己搭建一个博客试试呢?既可以满足写博客的需求,也可以在搭建的过程中学习web相关的知识,一举两得.而且自己搭建博客可以不用被博客平台的框架束缚,博客的可定制性更强,我们想加什么就可以加什么,那不是更爽?</p>
 <p>所以,我果断放弃了博客平台,自己搭架子!开干!</p>
@@ -220,25 +277,32 @@
 <p>由于博主也是才开始玩这一套框架,自己也有很多还没有摸透的地方,今后在使用中如果还有什么进阶的玩法,我会再开一篇文章写出来.</p>
 <p>感谢各位能看到这里.希望大家都能玩的开心.</p>
 
-    </div>
-
-    
-
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/Hexo/">#Hexo</a> <a href="/tags/Web/">#Web</a> <a href="/tags/github/">#github</a>
         </div>
     
 
-    <!-- Comments -->
-    
-
 </div>
+            
         </section>
-
     </div>
 </div>
+
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="wrap-pagination">
+                <a class="" href="/page/2/">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                </a>
+                <a class="disabled" href="/">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </div>
 
