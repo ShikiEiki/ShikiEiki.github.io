@@ -144,7 +144,7 @@
             
                 <span class="date">2017-04-28</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            <a href="#disqus_thread" class="comments">Comments</a>
             
                 <span class="category">
                     <a href="/categories/Android知识/">Android知识</a>
@@ -160,7 +160,8 @@
 
         <!-- Post Content -->
         <p>欢迎转载,转载请标明出处.</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a>Layout Specs</h3><p>Layout Spec在逻辑上等同于Android的View的组合.它简单的把一些已经存在的component组合到一个不可变的布局树中.</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><h3 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a>Layout Specs</h3><p></p><br><p></p><p></p>
+<p>Layout Spec在逻辑上等同于Android的View的组合.它简单的把一些已经存在的component组合到一个不可变的布局树中.</p>
 <p>实现一个layout spec非常简单:你只需要写一个标注为@OnCreateLayout的方法,并且让它返回一个不可变的<a href="">ComponentLayout</a>对象的树.</p>
 <p>让我们从一个简单的例子开始:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop <span class="keyword">int</span> color,</div><div class="line">      @Prop String title) &#123;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> Row.create(c)</div><div class="line">          .alignItems(CENTER)</div><div class="line">          .child(</div><div class="line">              SolidColor.create(c)</div><div class="line">                  .colorRes(color)</div><div class="line">                  .withLayout()</div><div class="line">                  .widthDip(<span class="number">40</span>)</div><div class="line">                  .heightDip(<span class="number">40</span>))</div><div class="line">          .child(</div><div class="line">              Text.create(c)</div><div class="line">                  .text(title)</div><div class="line">                  .textSizeRes(R.dimen.my_text_size)</div><div class="line">                  .withLayout()</div><div class="line">                  .flexGrow(<span class="number">1f</span>))</div><div class="line">          .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>正如你所见,layout spec类使用@LayoutSpec注释.</p>
@@ -170,7 +171,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SolidColor.create(c)</div><div class="line">    .uri(imageUri)</div><div class="line">    .withLayout()</div><div class="line">    .width(<span class="number">40</span>)</div><div class="line">    .height(<span class="number">40</span>)</div></pre></td></tr></table></figure>
 <p>第二个子节点是一个Text Component,它拥有一个名叫text的prop,并且使用grow(1f)填充了Myconponent中的剩余的水平空间(等同于Android LinearLayout中的layoutWeight).文字大小实在my_text_size尺寸文件中定义的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Text.create(c)</div><div class="line">    .text(title)</div><div class="line">    .textSizeRes(R.dimen.my_text_size)</div><div class="line">    .withLayout()</div><div class="line">    .grow(<span class="number">1f</span>)</div></pre></td></tr></table></figure></p>
 <p>你可以查看完整的<a href="">Yoga</a>文档来获取所有框架开放出的布局特性.</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
 <p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
 
     </div>
 
