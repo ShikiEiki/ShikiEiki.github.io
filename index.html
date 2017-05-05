@@ -139,6 +139,95 @@
 
     <div class="post-header index">
         <h1 class="title">
+            <a href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-State/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-State
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-04</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>欢迎转载,转载请标明出处.</p>
+<h3 id="State-状态"><a href="#State-状态" class="headerlink" title="State(状态)"></a>State(状态)</h3><p>Litho Component可以包含两种类型的data:</p>
+<ul>
+<li>prop:从父级继承并且在Component的生命周期内不能被改变.</li>
+<li>state:封装实现的细节,由Component管理,并且对父级是透明的.</li>
+</ul>
+<p>一个常见的需要使用State的例子是:渲染一个Checkbox(复选框).Component需要根据选中还是未选中来渲染不同的drawable,但是这是一个Component内部的信息,而他的父级不需要去关心这个状态.</p>
+<h5 id="声明一个Component的状态"><a href="#声明一个Component的状态" class="headerlink" title="声明一个Component的状态"></a>声明一个Component的状态</h5><p>你可以使用@State注释在spec的生命周期方法中定义一个Component的State,这与你定义Prop的方法是一样的.</p>
+<p>定义State元素在Layout Spec和Mount Spec的生命周期方法中可用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span>		</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckboxSpec</span> </span>&#123;		</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @State <span class="keyword">boolean</span> isChecked) &#123;</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> Column.create(c)</div><div class="line">        .child(Image.create(c)</div><div class="line">            .srcRes(isChecked</div><div class="line">                ? R.drawable.is_checked</div><div class="line">                : R.drawable.is_unchecked))</div><div class="line">        .child(Text.create(c)</div><div class="line">            .text(<span class="string">"Submit"</span>)</div><div class="line">            .clickHandler(Checkbox.onClickedText(c))</div><div class="line">        .build;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(ClickEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onClickedText</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @State <span class="keyword">boolean</span> isChecked) &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h5 id="初始化State的值"><a href="#初始化State的值" class="headerlink" title="初始化State的值"></a>初始化State的值</h5><p>为了给State设置一个初始值,你需要在你的Spec中使用@OnCreateInitialState注释来编写一个方法.</p>
+<p>关于编写@OnCreateInitialState方法,你需要知道以下几点:</p>
+<ul>
+<li>第一个参数必须是ComponentContext类型.</li>
+<li>@Prop参数在这里也是可用的.</li>
+<li>剩下的参数的名称必须和其他生命周期方法中的@State参数保持一致,并且这些剩下参数的类型必须为<a href="http://fblitho.com/javadoc/com/facebook/litho/StateValue" target="_blank" rel="external">StateValue</a>,其中泛型的类型与对应的@State一致.</li>
+<li>@OnCreateInitialState 方法不是必须的.如果你不定义或者没有定义所有state的初始值,那么那些没有被定义初始值的state将会使用java的默认值.</li>
+<li>每一个Component的@OnCreateInitialState方法只会在Component第一次被添加到Component树的时候被调用一次.如果Component的key没有改变,那么后续对Component树布局的重新计算不会重新调用@OnCreateInitialState方法.</li>
+<li>你永远不需要自己调用@OnCreateInitialState方法.</li>
+</ul>
+<p>下面是例子是如何使用父级传下来的值来初始化一个复选框的state值.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span>		</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckboxSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateInitialState</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">createInitialState</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      StateValue&lt;Boolean&gt; isChecked,</div><div class="line">      @Prop <span class="keyword">boolean</span> initChecked) &#123;</div><div class="line"></div><div class="line">    isChecked.set(initChecked);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="定义State的更新"><a href="#定义State的更新" class="headerlink" title="定义State的更新"></a>定义State的更新</h5><p>你可以使用@OnUpdateState在Spec中声明一个方法来定义Component的State更新的方式.</p>
+<p>你可以根据你想更新的state或者你的state依赖的参数的值来定义任意多的你需要的@OnUpdateState方法.</p>
+<p>每次对@OnUpdateState方法的调用都会触发一次新的对它的Component树的布局计算.为了获得更好的性能,如果在某种情况下会触发对多个State的更新,那么你就应该定义一个@OnUpdateMethod方法来更新所有这些state的值.合并这些更新操作可以减少新的布局计算的次数,从而提升性能.</p>
+<p>关于编写@OnUpdateState方法,你需要知道以下几点:</p>
+<ul>
+<li>代表State的参数名必须和其他方法中使用@State定义的参数名一样,并且类型必须为StateValue,泛型类型也必须和对应的@State参数的类型一致.</li>
+<li>@Param参数也是可以使用的.如果你的State的值需要依赖于Prop,你可以在@OnupdateState函数的参数中使用@Param声明,这样就可以在更新被触发的时候传递prop的值进来了.</li>
+<li>所有其他的参数都必须在其他生命周期方法中有一个对应的@State参数,并且类型必须为StateValue,泛型的类型也必须和@State参数一致.</li>
+</ul>
+<p>下面是如何给checkbox定义一个state方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span>		</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckboxSpec</span> </span>&#123;		</div><div class="line"></div><div class="line">  <span class="meta">@OnUpdateState</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateCheckboxState</span><span class="params">(StateValue&lt;Boolean&gt; isChecked)</span> </span>&#123;</div><div class="line">    isChecked.set(!isChecked.get());</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果你想要合并多个state更新到一个方法中,你只需要把所有这些state都添加到一个@OnUpdateState方法中:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnUpdateState</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateMultipleStates</span><span class="params">(</span></span></div><div class="line">    StateValue&lt;Boolean&gt; stateOne,</div><div class="line">    StateValue&lt;String&gt; stateTwo,</div><div class="line">    @Param <span class="keyword">int</span> someParam) &#123;</div><div class="line"></div><div class="line">  <span class="keyword">final</span> <span class="keyword">boolean</span> thresholdReached = someParam &gt; <span class="number">100</span>;</div><div class="line">  stateOne.set(thresholdReached);</div><div class="line">  stateTwo.set(thresholdReached ? <span class="string">"reached"</span> : <span class="string">"not reached"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h5 id="调用State更新"><a href="#调用State更新" class="headerlink" title="调用State更新"></a>调用State更新</h5><p>对你的Spec中的每一个@OnUpdateState方法,自动生成的Component中都会包含两个方法,他们在后台都会委托给@OnUpdateState方法处理.</p>
+<ul>
+<li>一个和@OnUpdateState同名的静态方法,它将同步的应用state的更新.</li>
+<li>一个和@OnUpdateState同名并且加上Async后缀的静态方法,它将异步的触发State的更新.这两个方法都使用ComponentContext作为第一个参数,后面的参数与你在@OnUpdateState方法中使用@Param定义的参数相同.</li>
+</ul>
+<p>下面展示了当用户点击的时候如何调用State更新方法来更新你的复选框:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span>		</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckboxSpec</span> </span>&#123;		</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @State <span class="keyword">boolean</span> isChecked) &#123;</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> Column.create(c)</div><div class="line">        .child(Image.create(c)</div><div class="line">        .srcRes(isChecked</div><div class="line">            ? R.drawable.is_checked</div><div class="line">            : R.drawable.is_unchecked))</div><div class="line">        .clickHandler(Checkbox.onCheckboxClicked(c)))</div><div class="line">    .build;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnUpdateState</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateCheckbox</span><span class="params">(StateValue&lt;Boolean&gt; isChecked)</span> </span>&#123;</div><div class="line">    isChecked.set(!isChecked.get());</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(ClickEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onCheckboxClicked</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">    Checkbox.updateCheckboxAsync(c);</div><div class="line">    <span class="comment">// Checkbox.updateCheckbox(c); for a sync update</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当你调用State更新方法的时候,你需要记住下面几点:</p>
+<ul>
+<li>当调用一个State更新方法的时候,作为第一个参数的ComponentContext必须总是为更新发生时的生命周期方法中传递进来的那个ComponentContext.这个context包含了现在已知的State的值等重要信息,在布局计算时,这些信息对把旧的Component转换成新的Component非常重要.</li>
+<li>在LayoutSpec中,你应该避免在onCreateLayout中调用State更新方法,除非你完全确定它只会发生很少并且确定的的次数。每一次调用State更新方法都会引起Component树的一次新的布局计算，而计算又会反过来调用它其中所有的Component的onCreateLayout方法，因此，这很容易引起死循环。你应该考虑是否使用懒汉式State更新(下面会说到)才是更加适用于你的情况的方法.</li>
+<li>在MountSpec中,永远也不要在mount和bind方法中调用State更新方法.如果你需要在这类方法中更新State的值,你应该使用下面会讲到的懒汉式State更新来替代.</li>
+</ul>
+<h5 id="Key和识别Component"><a href="#Key和识别Component" class="headerlink" title="Key和识别Component"></a>Key和识别Component</h5><p>Litho框架将会为每一个Component设置一个key值,这个值取决于它的类型和它的父级的key值.你可以使用这个key值来确定在State更新的时候哪一个Component才是我们需要更新的,或者使用这个key值在遍历Component树的时候查找Component.</p>
+<p>具有相同父级的同类型Component将会被设定相同的key值.因此我们需要一种方法来唯一的识别它们.</p>
+<p>此外,当组件的State或者Prop被更新并且Component树重新被创建的时候,会出现一些Component被移除,添加或者在树中重新安排位置的情况.因为Component可能是动态的,因此我们需要一种方法,能在即使Component树改变的情况下还能追踪到应该是哪个Component去进行状态更新.</p>
+<p>Component.Builder类会暴露一个.key()方法,你可以使用它来在创建Component的时候制定一个唯一的key给它,以便将来能够识别它.</p>
+<p>当你在一个父控件下拥有多个相同类型的Component时,或者你期望的布局内容是动态的时候,你就应该设置这个key值.</p>
+<p>一种最常见的你需要手动给你的Component设置key的情况是,你在一个循环中创建和添加子Component:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnCreateLayout</span></div><div class="line"><span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">    ComponentContext c,</div><div class="line">    @State <span class="keyword">boolean</span> isChecked) &#123;</div><div class="line"></div><div class="line">  <span class="keyword">final</span> ComponentLayout.Builder parent = Column.create(c);</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">    parent.child(Text.create(c).key(<span class="string">"key"</span> +i));</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> parent.build();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h5 id="懒汉式State更新"><a href="#懒汉式State更新" class="headerlink" title="懒汉式State更新"></a>懒汉式State更新</h5><p>当你想要更新State的值但是又不想立刻触发一次性的布局计算的时候,你可以使用懒汉式State更新.当你调用懒汉式State更新之后,Component将会保持现有的State值直到下一次布局计算被别的机制(例如收到一个新的prop或者定期的State更新)触发,此时State的值才会被更新.在不需要立刻进行布局计算的情况下,懒汉式State更新对想要更新内部Component信息并且在Component树的重新布局中保持这些信息是非常实用的.</p>
+<p>为了使用懒汉式State更新,你需要在@State注释中把canUpdateLazily参数设置为true.</p>
+<p>如果我们把一个名叫foo的State标记为canUpdateLazily,Litho框架将会自动生成一个静态State更新方法,名叫LazyUpdateFoo,它将带有一个参数,用于设置foo的新值.</p>
+<p>State被标记为canUpdateLazily后依然可以使用常规的State更新.</p>
+<p>让我们看下面的例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnCreateLayout</span></div><div class="line"><span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">    <span class="keyword">final</span> ComponentContext c,</div><div class="line">    @State(canUpdateLazily = <span class="keyword">true</span>) String foo) &#123;</div><div class="line"></div><div class="line">  FooComponent.lazyUpdateFoo(context, <span class="string">"updated foo"</span>);</div><div class="line">  <span class="keyword">return</span> Column.create(c)</div><div class="line">      .child(</div><div class="line">          Text.create(c)</div><div class="line">              .text(foo))</div><div class="line">      .build();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@OnCreateInitialState</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onCreateInitialState</span><span class="params">(StateValue&lt;String&gt; foo)</span> </span>&#123;</div><div class="line">  foo.set(<span class="string">"first foo"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一次FooComponent被渲染的时候,即使它的State foo已经被懒汉式更新成另一个值了,它的子Text Component也会显示”first foo”.当一个常规的State更新被触发,或者收到一个新的prop的时候,就会触发布局计算,懒汉式更新将会生效,Text将会被渲染成”update foo”.</p>
+<h5 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h5><p>由于<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">后台布局</a>机制,State可以在任何时候被多个线程访问.为了确保线程安全,State对象应该是不可变的(即使有极少数情况下不能实现这一点,那么也应该确保State对象是线程安全的).最简单的解决方案是基于原语来表述你的State,因为根据定义,原语就是不可变的.</p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
             <a href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">
                 Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航
             </a>
@@ -163,7 +252,7 @@
 <h1 id="Litho-官方文档翻译"><a href="#Litho-官方文档翻译" class="headerlink" title="Litho 官方文档翻译"></a>Litho 官方文档翻译</h1><h3 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h3><hr>
 <h5 id="Litho是什么"><a href="#Litho是什么" class="headerlink" title="Litho是什么?"></a><a href="https://shikieiki.github.io/2017/04/25/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-Litho%E6%98%AF%E4%BB%80%E4%B9%88/">Litho是什么?</a></h5><h5 id="编写动机"><a href="#编写动机" class="headerlink" title="编写动机"></a><a href="https://shikieiki.github.io/2017/04/25/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E7%BC%96%E5%86%99%E5%8A%A8%E6%9C%BA%20/">编写动机</a></h5><h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a><a href="https://shikieiki.github.io/2017/04/25/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8/">使用</a></h5><h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h3><hr>
 <h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a><a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/">准备工作</a></h5><h5 id="教程"><a href="#教程" class="headerlink" title="教程"></a><a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%95%99%E7%A8%8B/">教程</a></h5><h5 id="编写Component"><a href="#编写Component" class="headerlink" title="编写Component"></a><a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E7%BC%96%E5%86%99Component/">编写Component</a></h5><h5 id="使用Component"><a href="#使用Component" class="headerlink" title="使用Component"></a><a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8Component/">使用Component</a></h5><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><hr>
-<h5 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a><a href="https://shikieiki.github.io/2017/04/28/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-LayoutSpecs/">Layout Specs</a></h5><h5 id="Mount-Specs"><a href="#Mount-Specs" class="headerlink" title="Mount Specs"></a><a href="https://shikieiki.github.io/2017/04/28/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-MountSpecs/">Mount Specs</a></h5><h5 id="Props"><a href="#Props" class="headerlink" title="Props"></a><a href="https://shikieiki.github.io/2017/05/02/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-Props/">Props</a></h5><h5 id="State-未完成"><a href="#State-未完成" class="headerlink" title="State(未完成)"></a><a href="">State(未完成)</a></h5><h5 id="Layout-未完成"><a href="#Layout-未完成" class="headerlink" title="Layout(未完成)"></a><a href="">Layout(未完成)</a></h5><h5 id="Recycler-未完成"><a href="#Recycler-未完成" class="headerlink" title="Recycler(未完成)"></a><a href="">Recycler(未完成)</a></h5><h3 id="处理事件"><a href="#处理事件" class="headerlink" title="处理事件"></a>处理事件</h3><hr>
+<h5 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a><a href="https://shikieiki.github.io/2017/04/28/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-LayoutSpecs/">Layout Specs</a></h5><h5 id="Mount-Specs"><a href="#Mount-Specs" class="headerlink" title="Mount Specs"></a><a href="https://shikieiki.github.io/2017/04/28/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-MountSpecs/">Mount Specs</a></h5><h5 id="Props"><a href="#Props" class="headerlink" title="Props"></a><a href="https://shikieiki.github.io/2017/05/02/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-Props/">Props</a></h5><h5 id="State"><a href="#State" class="headerlink" title="State"></a><a href="">State</a></h5><h5 id="Layout-未完成"><a href="#Layout-未完成" class="headerlink" title="Layout(未完成)"></a><a href="">Layout(未完成)</a></h5><h5 id="Recycler-未完成"><a href="#Recycler-未完成" class="headerlink" title="Recycler(未完成)"></a><a href="">Recycler(未完成)</a></h5><h3 id="处理事件"><a href="#处理事件" class="headerlink" title="处理事件"></a>处理事件</h3><hr>
 <h5 id="总览-未完成"><a href="#总览-未完成" class="headerlink" title="总览(未完成)"></a><a href="">总览(未完成)</a></h5><h5 id="触摸事件处理-未完成"><a href="#触摸事件处理-未完成" class="headerlink" title="触摸事件处理(未完成)"></a><a href="">触摸事件处理(未完成)</a></h5><h5 id="可见新的处理-未完成"><a href="#可见新的处理-未完成" class="headerlink" title="可见新的处理(未完成)"></a><a href="">可见新的处理(未完成)</a></h5><h3 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h3><hr>
 <h5 id="样式-未完成"><a href="#样式-未完成" class="headerlink" title="样式(未完成)"></a><a href="">样式(未完成)</a></h5><h5 id="可访问性-未完成"><a href="#可访问性-未完成" class="headerlink" title="可访问性(未完成)"></a><a href="">可访问性(未完成)</a></h5><h5 id="RTL-未完成"><a href="#RTL-未完成" class="headerlink" title="RTL(未完成)"></a><a href="">RTL(未完成)</a></h5><h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><hr>
 <h5 id="单元测试-未完成"><a href="#单元测试-未完成" class="headerlink" title="单元测试(未完成)"></a><a href="">单元测试(未完成)</a></h5><h3 id="进阶指引"><a href="#进阶指引" class="headerlink" title="进阶指引"></a>进阶指引</h3><hr>
@@ -224,48 +313,6 @@
 <p>当你做了以上的更改后,MyComponent的builder将会根据被注释的prop的资源类型自动包含响应的Res,Attr,Dip,Px方法.因此你就可以像下面这么做:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">MyComponent.create(c)</div><div class="line">    .someStringRes(R.string.my_string)</div><div class="line">    .someSizePx(<span class="number">10</span>)</div><div class="line">    .someSizeDip(<span class="number">10</span>)</div><div class="line">    .someColorAttr(android.R.attr.textColorTertiary)</div></pre></td></tr></table></figure></p>
 <p>其他支持的资源类型包括 ResType.STRING_ARRAY, ResType.INT, ResType.INT_ARRAY, ResType.BOOL, ResType.COLOR, ResType.DIMEN_OFFSET, ResType.FLOAT, and ResType.DRAWABLE.</p>
 <h5 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h5><p>Component中的prop是只读的.当Component的父级创建Component时传递给它的prop响应的值之后,在component的生命周期中,它们的值就不能被改变了.如果prop的值必须被更新,那么它的父级创建一个新的Component并且传递将新的值传递给它的prop.prop对象必须保证是不可变的.因为在<a href="">后台布局计算</a>中prop可能被多个线程同时访问.Prop的不可变性能够确保在你的component层级中不会出现线程安全问题.</p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-28</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a>Layout Specs</h3><p>Layout Spec在逻辑上等同于Android的View的组合.它简单的把一些已经存在的component组合到一个不可变的布局树中.</p>
-<p>实现一个layout spec非常简单:你只需要写一个标注为@OnCreateLayout的方法,并且让它返回一个不可变的<a href="">ComponentLayout</a>对象的树.</p>
-<p>让我们从一个简单的例子开始:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop <span class="keyword">int</span> color,</div><div class="line">      @Prop String title) &#123;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> Row.create(c)</div><div class="line">          .alignItems(CENTER)</div><div class="line">          .child(</div><div class="line">              SolidColor.create(c)</div><div class="line">                  .colorRes(color)</div><div class="line">                  .withLayout()</div><div class="line">                  .widthDip(<span class="number">40</span>)</div><div class="line">                  .heightDip(<span class="number">40</span>))</div><div class="line">          .child(</div><div class="line">              Text.create(c)</div><div class="line">                  .text(title)</div><div class="line">                  .textSizeRes(R.dimen.my_text_size)</div><div class="line">                  .withLayout()</div><div class="line">                  .flexGrow(<span class="number">1f</span>))</div><div class="line">          .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>正如你所见,layout spec类使用@LayoutSpec注释.</p>
-<p>用@OnCreateLayout注释标注的方法必须以<a href="">ComponentContext</a>作为第一个参数,并且在它后面有以@Prop标注的其他参数.注释处理器将会在编译的时候对它们和其他API的不变性进行验证.</p>
-<p>在上面的示例中,布局树中有一个根容器,容器中有两个水平堆叠(Row.create)且垂直居中(Align.CENTER)的子节点.</p>
-<p>第一个子节点是一个<a href="">SolidColor</a> component,它拥有一个colorRes的Prop和40dp的宽和高.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SolidColor.create(c)</div><div class="line">    .uri(imageUri)</div><div class="line">    .withLayout()</div><div class="line">    .width(<span class="number">40</span>)</div><div class="line">    .height(<span class="number">40</span>)</div></pre></td></tr></table></figure>
-<p>第二个子节点是一个Text Component,它拥有一个名叫text的prop,并且使用grow(1f)填充了Myconponent中的剩余的水平空间(等同于Android LinearLayout中的layoutWeight).文字大小实在my_text_size尺寸文件中定义的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Text.create(c)</div><div class="line">    .text(title)</div><div class="line">    .textSizeRes(R.dimen.my_text_size)</div><div class="line">    .withLayout()</div><div class="line">    .grow(<span class="number">1f</span>)</div></pre></td></tr></table></figure></p>
-<p>你可以查看完整的<a href="">Yoga</a>文档来获取所有框架开放出的布局特性.</p>
 <p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
 
         </div>
@@ -346,6 +393,48 @@
 
     <div class="post-header index">
         <h1 class="title">
+            <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-28</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a>Layout Specs</h3><p>Layout Spec在逻辑上等同于Android的View的组合.它简单的把一些已经存在的component组合到一个不可变的布局树中.</p>
+<p>实现一个layout spec非常简单:你只需要写一个标注为@OnCreateLayout的方法,并且让它返回一个不可变的<a href="">ComponentLayout</a>对象的树.</p>
+<p>让我们从一个简单的例子开始:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop <span class="keyword">int</span> color,</div><div class="line">      @Prop String title) &#123;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> Row.create(c)</div><div class="line">          .alignItems(CENTER)</div><div class="line">          .child(</div><div class="line">              SolidColor.create(c)</div><div class="line">                  .colorRes(color)</div><div class="line">                  .withLayout()</div><div class="line">                  .widthDip(<span class="number">40</span>)</div><div class="line">                  .heightDip(<span class="number">40</span>))</div><div class="line">          .child(</div><div class="line">              Text.create(c)</div><div class="line">                  .text(title)</div><div class="line">                  .textSizeRes(R.dimen.my_text_size)</div><div class="line">                  .withLayout()</div><div class="line">                  .flexGrow(<span class="number">1f</span>))</div><div class="line">          .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>正如你所见,layout spec类使用@LayoutSpec注释.</p>
+<p>用@OnCreateLayout注释标注的方法必须以<a href="">ComponentContext</a>作为第一个参数,并且在它后面有以@Prop标注的其他参数.注释处理器将会在编译的时候对它们和其他API的不变性进行验证.</p>
+<p>在上面的示例中,布局树中有一个根容器,容器中有两个水平堆叠(Row.create)且垂直居中(Align.CENTER)的子节点.</p>
+<p>第一个子节点是一个<a href="">SolidColor</a> component,它拥有一个colorRes的Prop和40dp的宽和高.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SolidColor.create(c)</div><div class="line">    .uri(imageUri)</div><div class="line">    .withLayout()</div><div class="line">    .width(<span class="number">40</span>)</div><div class="line">    .height(<span class="number">40</span>)</div></pre></td></tr></table></figure>
+<p>第二个子节点是一个Text Component,它拥有一个名叫text的prop,并且使用grow(1f)填充了Myconponent中的剩余的水平空间(等同于Android LinearLayout中的layoutWeight).文字大小实在my_text_size尺寸文件中定义的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Text.create(c)</div><div class="line">    .text(title)</div><div class="line">    .textSizeRes(R.dimen.my_text_size)</div><div class="line">    .withLayout()</div><div class="line">    .grow(<span class="number">1f</span>)</div></pre></td></tr></table></figure></p>
+<p>你可以查看完整的<a href="">Yoga</a>文档来获取所有框架开放出的布局特性.</p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
             <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-编写Component/">
                 Facebook出品的Android声明式开源新框架Litho文档翻译-编写Component
             </a>
@@ -384,6 +473,42 @@
 <p>这个生成的ComponentLifeCycle类就是今后你会在你的产品中使用的类.而Spec类将在运行的时候在新生成的代码里被用作一个代表类.</p>
 <p>生成的新类暴露出来的唯一的API是一个create（…）方法，它为您在Spec类中声明的@Props返回相应的Component.Builder。</p>
 <p>在运行的时候,同一种类型的component的所有实例都共享相同的componentLifecycle引用.这意味着一个spec实例对应的是一种component类型,而不是一个component实例.</p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-27</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><h3 id="使用Component"><a href="#使用Component" class="headerlink" title="使用Component"></a>使用Component</h3><p>生成的Component类为你在spec中定义的props提供了一个简单的构造器.为了在你的UI中使用生成的Component,你需要一个LithoView,它是一个Android ViewGroup并且可以渲染component.</p>
+<p>你可以通过以下的代码制定一个LithoView来渲染一个Component.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component component = MyComponent.create()</div><div class="line">    .title(<span class="string">"My title"</span>)</div><div class="line">    .imageUri(Uri.parse(<span class="string">"http://example.com/myimage"</span>)</div><div class="line">    .build();</div><div class="line">LithoView view = LithoView.create(context, component);</div></pre></td></tr></table></figure></p>
+<p>在这个例子中,MyComponent将被托管给LithoView,你可以在你的程序中像使用一个普通的Android View一样去使用这个LithoView.你可以在<a href="">教程</a>里看到如何在一个Acitivity中使用这个LithoView.</p>
+<p>重要提醒:示例中的LithoView,如果你在你的View层级中直接使用,将会在主线程中同步的执行布局任务.有关在主线程之外执行布局任务的更多信息,请参阅<a href="">异步布局</a>.</p>
 <p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
 
         </div>
@@ -515,81 +640,6 @@
 
     <div class="post-header index">
         <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-27</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><h3 id="使用Component"><a href="#使用Component" class="headerlink" title="使用Component"></a>使用Component</h3><p>生成的Component类为你在spec中定义的props提供了一个简单的构造器.为了在你的UI中使用生成的Component,你需要一个LithoView,它是一个Android ViewGroup并且可以渲染component.</p>
-<p>你可以通过以下的代码制定一个LithoView来渲染一个Component.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component component = MyComponent.create()</div><div class="line">    .title(<span class="string">"My title"</span>)</div><div class="line">    .imageUri(Uri.parse(<span class="string">"http://example.com/myimage"</span>)</div><div class="line">    .build();</div><div class="line">LithoView view = LithoView.create(context, component);</div></pre></td></tr></table></figure></p>
-<p>在这个例子中,MyComponent将被托管给LithoView,你可以在你的程序中像使用一个普通的Android View一样去使用这个LithoView.你可以在<a href="">教程</a>里看到如何在一个Acitivity中使用这个LithoView.</p>
-<p>重要提醒:示例中的LithoView,如果你在你的View层级中直接使用,将会在主线程中同步的执行布局任务.有关在主线程之外执行布局任务的更多信息,请参阅<a href="">异步布局</a>.</p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-27</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h3 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h3><p>设备屏幕通常以每秒60帧的速率刷新。为了能提供流畅的UI效果，应用程序需要能够每16ms一帧的速度持续渲染我们的UI。如果达不到这个时间标准，就会导致丢帧和不佳的用户体验。随着UI变得越来越复杂，在限制的时间内越来越难以完成所有的渲染工作。特别是在动态滚动的界面上,因为新的UI块的不断被添加到屏幕上，完成渲染就变得尤其有挑战性。<br>Android使用RecyclerView解决了这个问题，RecyclerView是一个动态UI容器，可以通过创建足够的视图来填充屏幕，然后在UI滚动中回收和重用它们，以显示大量数据中的元素。</p>
-<p><img src="/image/20170426171157.gif" alt=""></p>
-<p>RecyclerView支持异构的内容的显示。为此，它会根据item的不同的类型将其保留在不同的池中。虽然这个方法在简单情况下工作正常，但是对于具有许多不同item类型的UI，这种方法已经被证明是有问题的。在具有许多item类型的场景中，如果一个item随着滚动事件进入视窗,则它这种类型的item是RecyclerView第一次显示可能性非常大。如果发生这种情况，RecyclerView必须为这个item进行内存分配。在短短的16ms中,RecyclerView必须为新的item进行绑定，测量和布局工作。</p>
-<p><img src="/image/20170426172051.gif" alt=""></p>
-<h5 id="Litho增量式回收"><a href="#Litho增量式回收" class="headerlink" title="Litho增量式回收"></a>Litho增量式回收</h5><p>我们希望为Litho建立一个更具可扩展性和更高效率的回收系统，同时我们希望从API中消除item类型的复杂性。在Litho中，布局的描述与实际用于在屏幕上呈现UI的Views和Drawable完全不相关。这意味着当我们需要在屏幕上放置一个新的RecyclerView item时，我们已经完全知道了该item的内容和该item与其余UI的相对位置。这允许Litho完全摆脱item类型的概念。在recyclerview滚动时,比起重复利用view来表示item,我们选择了增量式的利用例如Text或者Image这样的构建块.这种做法在传统的Android view上是不可能的，因为在传统的Android中,我们需要在完整的view tree上进行布局计算,当我们算出所有view的位置时，一切都已经被实例化了。</p>
-<p><img src="/image/20170426172130.gif" alt=""></p>
-<p>回收利用像Text这样的”原始item”能够大大增加应用程序的内存效率，比如你可以回收list中的任何一个Text的给其他需要显示的Text来用。最重要的是，由于我们的布局是提前计算的，所以我们能够确切地知道一个新的item什么时候会变得可见，这意味着，我们可以在屏幕上引入非常少量的”原始item”来显示每一帧,而不是在一帧中绑定并且绘制一个大的view tree。</p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
             <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-异步布局/">
                 Facebook出品的Android声明式开源新框架Litho文档翻译-异步布局
             </a>
@@ -670,15 +720,15 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-State/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
                 <a class="footer-post" href="/2017/05/02/Facebook出品的Android声明式开源新框架Litho文档翻译-Props/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
@@ -692,15 +742,15 @@
 
             
 <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
+    <h2>Categorias</h2>
     <ul>
         
         <li>
-            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
+            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
         </li>
         
         <li>
-            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
+            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
         </li>
         
         <li>
