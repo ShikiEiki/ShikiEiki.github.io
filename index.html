@@ -159,7 +159,7 @@
     
         <div class="content">
             <p>欢迎转载,转载请标明出处.</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h3 id="State-状态"><a href="#State-状态" class="headerlink" title="State(状态)"></a>State(状态)</h3><p></p><br><p></p><p></p>
+<h3 id="参考—State-状态"><a href="#参考—State-状态" class="headerlink" title="参考—State(状态)"></a>参考—State(状态)</h3><p></p><br><p></p><p></p>
 <p>Litho Component可以包含两种类型的data:</p>
 <ul>
 <li>prop:从父级继承并且在Component的生命周期内不能被改变.</li>
@@ -208,9 +208,9 @@
 <ul>
 <li>当调用一个State更新方法的时候,作为第一个参数的ComponentContext必须总是为更新发生时的生命周期方法中传递进来的那个ComponentContext.这个context包含了现在已知的State的值等重要信息,在布局计算时,这些信息对把旧的Component转换成新的Component非常重要.</li>
 <li>在LayoutSpec中,你应该避免在onCreateLayout中调用State更新方法,除非你完全确定它只会发生很少并且确定的的次数。每一次调用State更新方法都会引起Component树的一次新的布局计算，而计算又会反过来调用它其中所有的Component的onCreateLayout方法，因此，这很容易引起死循环。你应该考虑是否使用懒汉式State更新(下面会说到)才是更加适用于你的情况的方法.</li>
-<li>在MountSpec中,永远也不要在mount和bind方法中调用State更新方法.如果你需要在这类方法中更新State的值,你应该使用下面会讲到的懒汉式State更新来替代.<br><p></p><br><p></p><h4 id="Key和识别Component"><a href="#Key和识别Component" class="headerlink" title="Key和识别Component"></a>Key和识别Component</h4></li>
+<li>在MountSpec中,永远也不要在mount和bind方法中调用State更新方法.如果你需要在这类方法中更新State的值,你应该使用下面会讲到的懒汉式State更新来替代.<br><p></p><br><p></p></li>
 </ul>
-<hr>
+<h4 id="Key和识别Component"><a href="#Key和识别Component" class="headerlink" title="Key和识别Component"></a>Key和识别Component</h4><hr>
 <p>Litho框架将会为每一个Component设置一个key值,这个值取决于它的类型和它的父级的key值.你可以使用这个key值来确定在State更新的时候哪一个Component才是我们需要更新的,或者使用这个key值在遍历Component树的时候查找Component.</p>
 <p>具有相同父级的同类型Component将会被设定相同的key值.因此我们需要一种方法来唯一的识别它们.</p>
 <p>此外,当组件的State或者Prop被更新并且Component树重新被创建的时候,会出现一些Component被移除,添加或者在树中重新安排位置的情况.因为Component可能是动态的,因此我们需要一种方法,能在即使Component树改变的情况下还能追踪到应该是哪个Component去进行状态更新.</p>
