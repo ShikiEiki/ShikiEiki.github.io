@@ -144,7 +144,7 @@
             
                 <span class="date">2017-04-27</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            <a href="#disqus_thread" class="comments">Commentaires</a>
             
                 <span class="category">
                     <a href="/categories/Android知识/">Android知识</a>
@@ -178,8 +178,8 @@
 </ul>
 <p></p><br><p></p><p></p>
 <h4 id="Spec-生命周期和Component类"><a href="#Spec-生命周期和Component类" class="headerlink" title="Spec,生命周期和Component类"></a>Spec,生命周期和Component类</h4><hr>
-<p>一个Component Spec子类将被处理用于生成一个ComponentLifecycle的子类,这个子类的名字将会是Spec的名字去掉soec后缀.例如,MyComponentSpec将会生成MyComponent类.</p>
-<p>这个生成的ComponentLifeCycle类就是今后你会在你的产品中使用的类.而Spec类将在运行的时候在新生成的代码里被用作一个代表类.</p>
+<p>一个Component Spec子类将被处理用于生成一个<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentLifecycle" target="_blank" rel="external">ComponentLifecycle</a>的子类,这个子类的名字将会是Spec的名字去掉soec后缀.例如,MyComponentSpec将会生成MyComponent类.</p>
+<p>这个生成的ComponentLifeCycle类就是今后你会在你的产品中<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8Component/">使用</a>的类.而Spec类将在运行的时候在新生成的代码里被用作一个代表类.</p>
 <p>生成的新类暴露出来的唯一的API是一个create（…）方法，它为您在Spec类中声明的@Props返回相应的Component.Builder。</p>
 <p>在运行的时候,同一种类型的component的所有实例都共享相同的componentLifecycle引用.这意味着一个spec实例对应的是一种component类型,而不是一个component实例.</p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
