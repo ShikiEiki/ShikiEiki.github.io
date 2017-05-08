@@ -139,6 +139,150 @@
 
     <div class="post-header index">
         <h1 class="title">
+            <a href="/2017/04/25/Facebook出品的Android声明式开源新框架Litho文档翻译-使用/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-使用
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-25</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p></p><br><p></p><p></p>
+<p>Litho的首要使用场景为:具有复杂内容的RecyclerView.因为它甚至在具有复杂的item和多种类型的内容RecyclerView上也表现出了极好的滚动特性.这在使用传统的android view的情况下是非常具有挑战性的工作.</p>
+<p>你也可以因为Litho简单的声明式的API来选择采用Litho来构建UI,Litho的基于单向数据流函数式编程模型会在你的产品变得复杂的时候也很容易理解.</p>
+<p>高动态化的UI动画和复杂手势现在还很难用Litho实现,新的针对layout专场和手势的API将会很快推出.</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/25/Facebook出品的Android声明式开源新框架Litho文档翻译-Litho是什么/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-Litho是什么?
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-25</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="Litho是什么"><a href="#Litho是什么" class="headerlink" title="Litho是什么?"></a>Litho是什么?</h3><p></p><br><p></p><p></p>
+<p>Litho是一个为在Android系统上高效的构建用户界面(UI)的声明式框架.它允许你通过使用一套基于Java注解的简单的API来编写最优化的Android views.这个框架<a href="https://shikieiki.github.io/2017/04/25/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8/">主要是被设计</a>用来实现在RecyclerView上构建复杂的可滚动的UI的.</p>
+<p>通过Litho,你可以使用Litho的Components(组件)代替传统的Android Views来构建UI.一个Component本质上是一个带有不可变输入(我们称之为props)并且返回component hierachy(组件层级结构)来描述UI的方法.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop String name) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Text.create(c)</div><div class="line">        .text(<span class="string">"Hello, "</span> + name)</div><div class="line">        .textSizeRes(R.dimen.my_text_size)</div><div class="line">        .textColor(Color.BLACK)</div><div class="line">        .withLayout()</div><div class="line">        .paddingDip(ALL, <span class="number">10</span>)</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>你只需要简单的声明你想要展示的元素,然后Litho就会自动的渲染他们,并且以一种高效的方式——<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">使用后台线程计算布局参数</a>、<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-View%E7%9A%84%E6%89%81%E5%B9%B3%E5%8C%96/">自动扁平化层级结构</a>、还有使用<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%A2%9E%E9%87%8F%E5%BC%8F%E6%8C%82%E8%BD%BD/">增量式挂载机制</a>处理复杂的component。</p>
+<p>我们的<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%95%99%E7%A8%8B/">教程</a>可以指导你一步一步的在你的APP里使用Litho，或者你也可以阅读”快速开始”来学习如何<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E7%BC%96%E5%86%99Component/">编写</a>和<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8Component/">使用</a>Litho的Component。</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/03/01/为你的Github生成漂亮的徽章和进度条/">
+                为你的Github README生成漂亮的徽章和进度条
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-03-01</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/其他知识/">其他知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <h3 id="github上常见的徽章标签和进度条"><a href="#github上常见的徽章标签和进度条" class="headerlink" title="github上常见的徽章标签和进度条"></a>github上常见的徽章标签和进度条</h3><p>平时在上github的时候看到别人写的精美的README,我总是感到非常的羡慕.近来我也开始使用markdown写博客,看到之前有一些项目的README的开始部分总是会有例如<br><img src="https://img.shields.io/github/release/qubyte/rubidium.svg" alt=""></p>
+<p><img src="https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg" alt=""></p>
+<p>这样的徽章样式的标签.</p>
+<p>甚至还有些文章会有<br><img src="http://progressed.io/bar/28?title=progress" alt=""></p>
+<p><img src="http://progressed.io/bar/91?title=done" alt=""><br>这样的进度条,简直炫酷.这是怎么做到的呢?</p>
+<h3 id="已有的标签小程序"><a href="#已有的标签小程序" class="headerlink" title="已有的标签小程序"></a>已有的标签小程序</h3><p>网上搜了一下,用<a href="http://shields.io/" target="_blank" rel="external">shields.io</a>就可以解决!<br>但是这个网站怎么用?貌似写的不太清楚,网上也没有详细一点的介绍微博,只能自己试验了一下.</p>
+<p>我的理解这个网站提供了一批”标签小程序”,他们的作用是抓取一些动态的数据并自动生成标签图片.<br>比如抓取github上项目的最新的release版本号生成release标签,抓取twitter的账号关注人数生成关注标签等等.<br>使用这种标签能够保证每次刷新网页都会重新抓取数据,并且重新更新标签上的文字.这样就实现了动态变化的徽章标签.</p>
+<p>举例来说:<br><img src="/image/20170301152451.png" alt=""></p>
+<p>这一行的小程序功能就是用来展示某一个github项目最新的release版本号.</p>
+<p>点开你可以看到如下界面</p>
+<p><img src="/image/20170301152527.png" alt=""></p>
+<p>Image这一行就是小程序的URL,前面的<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://img.shields.io/github/release/</div></pre></td></tr></table></figure></p>
+<p>是小程序的位置,后面需要填写要获取的github用户名和项目名.svg,例如著名的tinker项目</p>
+<p><img src="/image/20170301153213.png" alt=""></p>
+<p>它的用户名是Tencent,项目名是tinker,所以我们把上面的小程序的URL补全成<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://img.shields.io/github/release/Tencent/tinker.svg</div></pre></td></tr></table></figure></p>
+<p>这样一个小勋章就做好了,我们可以把上面的URL粘贴到浏览器地址栏试一下<br><img src="https://img.shields.io/github/release/Tencent/tinker.svg" alt=""><br>是不是很炫酷?<br>再上<a href="https://github.com/Tencent/tinker/releases" target="_blank" rel="external">tinker-release</a>的github上看一下,果然显示的版本号就是tinker最新的版本号.</p>
+<p>等等,这就生成好了?那上面的小程序界面其他的部分是做什么的呢?<br>其实小程序只是为我们提供了一个便捷生成markdown图片链接的方式:<br>Link后面可以填写我们希望点击徽章跳转到的URL,注意这个地址跟徽章上显示什么毫无关系.能够影响徽章上的文字的只有Image后面的URL.</p>
+<p>填写了Link后,下方的Markdown后就会自动生成对应的markdown语法生成的徽章图片链接.如果我们在写github的README,就可以直接复制Markdown后面的文字,粘贴到README里面,是不是很方便.</p>
+<p>最下方的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Documentation</div><div class="line"></div><div class="line">If your GitHub badge errors, it might be because you hit GitHub&apos;s rate limits.</div><div class="line">You can increase Shields.io&apos;s rate limit by going to this page to add Shields as a GitHub application on your GitHub account.</div></pre></td></tr></table></figure></p>
+<p>的意思是如果小程序无法自动获得版本号,可能是由于github对小程序有限制,想要减少这种限制可以点击going to this page 去授权Shields访问github.</p>
+<h3 id="生成自定义徽章标签"><a href="#生成自定义徽章标签" class="headerlink" title="生成自定义徽章标签"></a>生成自定义徽章标签</h3><p>那么,如果我们想要生成的徽章字样和颜色<a href="http://shields.io/" target="_blank" rel="external">shields.io</a>上面没有怎么办?<br>例如我们想生成一个<br><img src="https://img.shields.io/badge/Hey!-Bro~-red.svg" alt=""><br>的徽章我们应该怎么做呢?</p>
+<p>把shields的网站拉到最后,可以看见</p>
+<p><img src="/image/20170301160933.png" alt=""></p>
+<p>对,就是这里!像我这样填,再点击Make Badge按钮就可以生成我们想要的任何徽章了!<br>color的颜色如果不知道怎么填,可以点击输入框会有下拉项提供选择哦</p>
+<h3 id="生成进度条标签"><a href="#生成进度条标签" class="headerlink" title="生成进度条标签"></a>生成进度条标签</h3><p>最后,我们想生成进度条怎么办?</p>
+<p>使用<a href="https://github.com/fehmicansaglam/progressed.io" target="_blank" rel="external">progressed.io</a>很简单就能生成!</p>
+<p>如图</p>
+<p><img src="/image/20170301161732.png" alt=""></p>
+<p>只要把URL中的数字换成自己想要的,就可以生成各种样式和颜色的进度条了.</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>如果我们在写markdown的时候想为我们的徽章或者进度条添加点击跳转的超链接,可以使用超链接和图片的语法嵌套来写,具体可以参照markdown标准语法.</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="string">![</span>](<span class="link">徽章/进度条URL</span>)](<span class="link">点击超链接</span>)</div></pre></td></tr></table></figure>
+<ul>
+<li>自定义徽章和进度条由于参数是写死的,不会根据网络的数据自动变化上面的文字,所以,这些标签是静态的,修改的时候需要我们手动更改URL.</li>
+</ul>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
             <a href="/2017/02/28/一个好用的Android比例自动适配的库/">
                 一个好用的Android比例自动适配的库
             </a>
@@ -324,19 +468,19 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-可见性的处理/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-触摸事件/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-Recycler/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-Layout/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-State/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/04/Facebook出品的Android声明式开源新框架Litho文档翻译-总览和导航/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>

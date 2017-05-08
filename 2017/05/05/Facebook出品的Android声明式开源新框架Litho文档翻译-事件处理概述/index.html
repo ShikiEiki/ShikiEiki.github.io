@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="努力进行各种研究...">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Dr.Fu">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="努力进行各种研究..." />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="FH01号自律型科学实验舱"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述 - FH01号自律型科学实验舱</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-05</span>
+            
+            <a href="#disqus_thread" class="comments">Kommentare</a>
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>欢迎转载,转载请标明出处.</p>
+<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p></p><br><p></p><p></p>
+<p>框架提供了一套多用途的API用来在事件发生的时候与Component通信.事件被声明成一个POJO并且使用@Event注释.为了方便,我们命名事件类时使用Event作为后缀.事件的类不一定必须是LayoutSpec或者MountSpec的内部类.这是因为从设计上看,Spec一般被认为是私有的概念,而事件却可以允许被多个Component使用.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Event</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorChangedEvent</span> </span>&#123;</div><div class="line">  <span class="keyword">public</span> <span class="keyword">int</span> color;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在这个例子中我们假设我们有一个Component名叫ColorComponent.为了指明一个ColorComponent可以分发ColorChangedEvent事件,我们的ColorComponentSpec必须在注释中注明这一点.注明的方式是使用@MountSpec或者@LayoutSpec注释中的events参数.一个Component的注释可以分派多个事件.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span>(events = &#123; ColorChangedEvent.class &#125;)</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ColorComponentSpec</span> </span>&#123;</div><div class="line">  ...</div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      Context c,</div><div class="line">      @Prop EventHandler colorChangedHandler,</div><div class="line">      @FromPrepare <span class="keyword">int</span> color) &#123;</div><div class="line">    ...</div><div class="line">    ColorComponent.dispatchColorChangedEvent(</div><div class="line">        colorChangedHandler,</div><div class="line">        color);</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对一个FooEvent类型的事件,将会自动生成一个对应的dispatchFooEvent方法和一个供事件回调使用的事件标识符.</p>
+<p>dispatchFooEvent方法使用一个<a href="http://fblitho.com/javadoc/com/facebook/litho/EventHandler" target="_blank" rel="external">EventHandler</a>作为第一个参数,它后面紧跟着的参数是你在@Event类中定义的参数的列表.我们规定为每一个你的Component暴露出的事件使用一个EventHandler prop.</p>
+<p>在上面的例子中,ColorComponent使用一个colorChangedHandler作为prop,并且使用自动生成的dispatchColorChangedEvent()方法把ColorChangedEvent分发给它.</p>
+<p></p><br><p></p><p></p>
+<h4 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h4><hr>
+<p>为了处理其他Component分发过来的事件,你需要一个EventHandler实例和一个匹配的回调.</p>
+<p>你可以使用自动生成的Component中的相对应的eventHandler factory方法来创建EventHandler实例.这个方法的名称将会和你的事件回调方法的名称相同.</p>
+<p>你可以使用@OnEvent注释定义事件回调.@OnEvent将接受一个参数:事件类.这个方法的第一个参数必须是一个ComponentContext,框架将会为你填充它.</p>
+<p>举例来说,下面是一个Component如何为上面声明的ColorChangedEvent定义一个handler.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      LayoutContext c,</div><div class="line">      @Prop String someColor) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Column.create(c)</div><div class="line">        ...</div><div class="line">        .child(</div><div class="line">            ColorComponent.create(c)</div><div class="line">                .color(someColor)</div><div class="line">                .colorChangedHandler(MyComponent.onColorChanged(c))</div><div class="line">        ...</div><div class="line">        .build();</div><div class="line"></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(ColorChangedEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onColorChanged</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @FromEvent <span class="keyword">int</span> color,</div><div class="line">      @Prop String someProp) &#123;</div><div class="line">    Log.d(<span class="string">"MyComponent"</span>, <span class="string">"Color changed: "</span> + color);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对一个或者多个回调方法的参数使用@Param注释,你可以定义动态的事件参数.如果你想要定义一个确定类型的事件的回调(例如onAvatarClicked()),但是你也想知道哪一个头像被点击了,使用@Param注释会变得非常实用.这个情况中的avatar参数将会被传递到eventHandler factory方法中.</p>
+<p>正如你所见,@OnEvent回调可以访问所有的Component的prop,就像其他的Spec方法一样.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FacePileComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      LayoutContext c,</div><div class="line">      @Prop Uri[] faces) &#123;</div><div class="line">    ComponentLayout.Builder builder = Column.create(c);</div><div class="line">    <span class="keyword">for</span> (Uri face : avatarUrls) &#123;</div><div class="line">      builder.child(</div><div class="line">          FrescoImage.create(c)</div><div class="line">              .uri(face)</div><div class="line">              .withLayout()</div><div class="line">              .clickHandler(FacePileComponent.onFaceClicked(c, face));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> builder.build();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(ClickEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onFaceClicked</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Param Uri face) &#123;</div><div class="line">    Log.d(<span class="string">"FacePileComponent"</span>, <span class="string">"Face clicked: "</span> + face);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/Android/">#Android</a> <a href="/tags/实用库/">#实用库</a> <a href="/tags/Litho/">#Litho</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    欢迎访问我的博客,本博客使用github page和Hexo搭建,技术小白自我进化中,很乐意讨论技术问题,欢迎给我发邮件~~
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-可见性的处理/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-触摸事件/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-Recycler/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/Android知识/">Android知识</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/ShikiEiki">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:515073770@qq.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
