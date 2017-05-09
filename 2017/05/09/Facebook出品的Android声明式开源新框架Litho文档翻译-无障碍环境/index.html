@@ -160,7 +160,7 @@
 
         <!-- Post Content -->
         <p>欢迎转载,转载请标明出处.</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><h3 id="无障碍环境"><a href="#无障碍环境" class="headerlink" title="无障碍环境"></a>无障碍环境</h3><p></p><br><p></p><p></p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><h3 id="无障碍环境"><a href="#无障碍环境" class="headerlink" title="无障碍环境"></a>无障碍环境</h3><p></p><br><p></p><p></p>
 <h4 id="内容描述"><a href="#内容描述" class="headerlink" title="内容描述"></a>内容描述</h4><hr>
 <p>所有的Component都默认支持内容描述.这意味着所有的布局builder都拥有一个CharSequence类型的prop叫做contentDescription.</p>
 <p>在任何component上设置内容描述都非常的简单:</p>
@@ -196,35 +196,44 @@
 </tr>
 <tr>
 <td>OnInitializeAccessibilityEventEvent</td>
-<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onInitializeAccessibilityEvent(android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">onInitializeAccessibilityEvent</a>)</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onInitializeAccessibilityEvent(android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">onInitializeAccessibilityEvent</a></td>
 </tr>
 <tr>
 <td>OnInitializeAccessibilityNodeInfoEvent</td>
-<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onInitializeAccessibilityNodeInfo(android.view.View, android.support.v4.view.accessibility.AccessibilityNodeInfoCompat" target="_blank" rel="external">onInitializeAccessibilityNodeInfo</a>)</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onInitializeAccessibilityNodeInfo(android.view.View, android.support.v4.view.accessibility.AccessibilityNodeInfoCompat" target="_blank" rel="external">onInitializeAccessibilityNodeInfo</a></td>
 </tr>
 <tr>
 <td>OnPopulateAccessibilityEventEvent</td>
-<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onPopulateAccessibilityEvent(android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">onPopulateAccessibilityEvent</a>)</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onPopulateAccessibilityEvent(android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">onPopulateAccessibilityEvent</a></td>
 </tr>
 <tr>
 <td>OnRequestSendAccessibilityEventEvent</td>
-<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onRequestSendAccessibilityEvent(android.view.ViewGroup, android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">onRequestSendAccessibilityEvent</a>)</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#onRequestSendAccessibilityEvent(android.view.ViewGroup, android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">onRequestSendAccessibilityEvent</a></td>
 </tr>
 <tr>
 <td>PerformAccessibilityActionEvent</td>
-<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#performAccessibilityAction(android.view.View, int, android.os.Bundle" target="_blank" rel="external">performAccessibilityAction</a>)</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#performAccessibilityAction(android.view.View, int, android.os.Bundle" target="_blank" rel="external">performAccessibilityAction</a></td>
 </tr>
 <tr>
 <td>SendAccessibilityEventEvent</td>
-<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#sendAccessibilityEvent(android.view.View, int" target="_blank" rel="external">sendAccessibilityEvent</a>)</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#sendAccessibilityEvent(android.view.View, int" target="_blank" rel="external">sendAccessibilityEvent</a></td>
 </tr>
 <tr>
 <td>SendAccessibilityUncheckedEvent</td>
-<td>[sendAccessibilityEventUnchecked][link]</td>
+<td><a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#sendAccessibilityEventUnchecked(android.view.View, android.view.accessibility.AccessibilityEvent" target="_blank" rel="external">sendAccessibilityEventUnchecked</a></td>
 </tr>
 </tbody>
 </table>
-<p>[link1]: <a href="https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#sendAccessibilityEventUnchecked(android.view.View" target="_blank" rel="external">https://developer.android.com/reference/android/support/v4/view/AccessibilityDelegateCompat.html#sendAccessibilityEventUnchecked(android.view.View</a>, android.view.accessibility.AccessibilityEvent)</p>
+<p>设置任何这些事件的处理程序将会导致在挂载的View中设置AccessibilityDelegate，当调用相应的方法时，它将调用您的事件处理程序。</p>
+<p>如果你没有提供处理程序的方法被调用,delegate将会交由ANdroid view的默认实现去处理(类似于调用了super或者superDelegate的实现).</p>
+<p>举例来说,下面是覆写Component中onInitializeAccessibilityNodeInfo的步骤:<br>1.实现一个事件处理器:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnEvent</span>(OnInitializeAccessiblityNodeInfoEvent.class)</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onInitializeAccessibilityNodeInfoEvent</span><span class="params">(</span></span></div><div class="line">    @FromEvent AccessibilityDelegateCompat superDelegate,</div><div class="line">    @FromEvent View view,</div><div class="line">    @FromEvent AccessibilityNodeInfoCompat node) &#123;</div><div class="line">  <span class="comment">// Equivalent to calling super on a regular AccessibilityDelegate, not required</span></div><div class="line">  superDelegate.onInitializeAccessibilityNodeInfo(view, node);</div><div class="line">  <span class="comment">// My implementation</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>2.把时间处理器设置到component中.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Text.create(c)</div><div class="line">    .text(title)</div><div class="line">    .withLayout()</div><div class="line">    .onInitializeAccessiblityNodeInfoHandler(MyComponent.onInitializeAccessibilityNodeInfoEvent(c))</div></pre></td></tr></table></figure></p>
+<p>AccessibilityDelegates的一个最好的特性之一就是它的甚至可以跨越视图的可重用性.而在Litho中,这也可以通过在Component中引入一个包含我们需要的事件处理器的包装spec来实现.例如.假设我们需要一个Component,它添加了”please”到了每一个它注释的AccessibilityEvent方法中.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PoliteComponentWrapper</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop Component&lt;?&gt; content) &#123;</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> Layout.create(c, content)</div><div class="line">        .onPopulateAccessibilityEventHandler(</div><div class="line">            PoliteComponentWrapper.onPopulateAccessibilityEvent(c))</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(OnPopulateAccessibilityEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onPopulateAccessibilityEvent</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @FromEvent AccessibilityDelegateCompat superDelegate,</div><div class="line">      @FromEvent View view</div><div class="line">      @FromEvent AccessibilityEvent event) &#123;</div><div class="line">    superDelegate.onPopulateAccessibilityEvent(view, event);</div><div class="line">    event.getText().add(<span class="string">"please"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在你可以使用PoliteComponentWrapper来替代任何你原来使用你的Component的地方了.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnCreateLayout</span></div><div class="line"><span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">    ComponentContext c,</div><div class="line">    @Prop CharSequence text) &#123;</div><div class="line">    </div><div class="line">  <span class="keyword">return</span> PoliteComponentWrapper.create(c)</div><div class="line">      .content(</div><div class="line">           Text.create(c)</div><div class="line">               .text(text))</div><div class="line">      .build();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
 
     </div>
 
@@ -266,6 +275,10 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/09/Facebook出品的Android声明式开源新框架Litho文档翻译-RTL/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/05/09/Facebook出品的Android声明式开源新框架Litho文档翻译-无障碍环境/">Facebook出品的Android声明式开源新框</a>
             </li>
             
@@ -275,10 +288,6 @@
             
             <li>
                 <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-可见性的处理/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-触摸事件/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>
