@@ -139,8 +139,132 @@
 
     <div class="post-header index">
         <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component
+            <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-MountSpecs
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-28</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><h3 id="Mount-Specs"><a href="#Mount-Specs" class="headerlink" title="Mount Specs"></a>Mount Specs</h3><p></p><br><p></p><p></p>
+<p>一个Mount Spec定义了一个可以渲染Views或者drawables的component.</p>
+<p>Mount Spec只有在你需要把自己的view/drawable集成到Component 框架中的时候才应当被创建.这里的Mount的意思是指布局树中所有的component执行的操作,用于提取它们的渲染状态(一个View或者一个Drawable)以供显示.</p>
+<p>Mount spec类应该使用@MountSpec去注释,并且至少实现一个@OnCreateMountContent方法.下方其他列出的方法是可选择实现的.</p>
+<p>mount spec component的生命周期如下:</p>
+<ul>
+<li>在布局计算之前,运行@OnPrepare一次</li>
+<li>在布局计算过程中,可选择的运行OnMeasure.</li>
+<li>在布局计算之后,运行@OnBoundsDefined一次.</li>
+<li>在component添加到托管视图之前,运行@OnCreateMountContent</li>
+<li>在component添加到托管视图之前,运行@OnMount</li>
+<li>在component添加到托管视图之后,运行@OnBind</li>
+<li>在从托管视图移除component之前,运行@OnUnBind</li>
+<li>在从托管视图移除component之前,可选择的运行@OnUnmount</li>
+</ul>
+<p></p><br><p></p><p></p>
+<h4 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h4><hr>
+<p>让我们从一个简单的ColorComponent开始,它有一个prop表示颜色名,并且装载它自己的ColorDrawable.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateMountContent</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ColorDrawable <span class="title">onCreateMountContent</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ColorDrawable();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnMount</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onMount</span><span class="params">(</span></span></div><div class="line">      ComponentContext context,</div><div class="line">      ColorDrawable colorDrawable,</div><div class="line">      @Prop String colorName) &#123;</div><div class="line">    colorDrawable.setColor(Color.parseColor(colorName));</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>挂载操作的API与Android的<a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter.html" target="_blank" rel="external">RecyclerView Adapter</a>非常相似.它有一个onCreateMountContent方法在回收池为空的时候创建和初始化View/Drawable内容,以及一个onMount方法能够根据当前的信息更新回收内容.</li>
+<li>onCreateMountContent的返回类型应该始终和onMount的第二个参数的类型相一致。它必须为View或Drawable的子类。这在编译时由注释处理器去验证。</li>
+<li>挂载总是发生在主线程中因为它可能需要处理Android Views(它们被绑定在主线程中).</li>
+<li>onCreateMountContent不能使用@Prop或任何其他带注释的参数。</li>
+<li>鉴于@OnMount方法始终在UI线程中运行，因此不应执行耗时的操作。</li>
+</ul>
+<p></p><br><p></p><p></p>
+<h4 id="阶段之间的输入和输出"><a href="#阶段之间的输入和输出" class="headerlink" title="阶段之间的输入和输出"></a>阶段之间的输入和输出</h4><hr>
+<p>你可以通过把重操作(耗时操作)移动到@OnPrepare方法中,来减轻UI线程的压力.这个方法只会在布局计算前执行一次,并且可以在后台线程中执行.</p>
+<p>假设现在我们需要将在UI线程之外解析得到的颜色名称应用到ColorComponent中.为了做到这一点,我们需要一种将@OnPrepare方法中生成的值传递给@OnMount方法的途径.Component框架提供了阶段间的输入和输出,使你能够做到这一点.</p>
+<p>让我们看看ColorComponent的@OnPrepare方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MountSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnPrepare</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onPrepare</span><span class="params">(</span></span></div><div class="line">      Context context,</div><div class="line">      @Prop String colorName,</div><div class="line">      Output&lt;Integer&gt; color) &#123;</div><div class="line">    color.set(Color.parseColor(colorName));</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateMountContent</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ColorDrawable <span class="title">onCreateMountContent</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ColorDrawable();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnMount</span></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onMount</span><span class="params">(</span></span></div><div class="line">      ComponentContext context,</div><div class="line">      ColorDrawable colorDrawable,</div><div class="line">      @FromPrepare <span class="keyword">int</span> color) &#123;</div><div class="line">    convertDrawable.setColor(color);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在@MountSpec方法中使用Output&lt;?&gt;会自动的创建一个输入在下一个阶段中.在这种情况下,一个@OnPrepare的输出就会在@OnMount中创建一个输入.</p>
+<p>在编译期间,注释处理器将会确保阶段间的不变性,例如你不能在@OnPrepare中使用@OnMeasure的输出,因为@OnPrepare总是在@OnMeasure之前执行.</p>
+<p></p><br><p></p><p></p>
+<h4 id="测量"><a href="#测量" class="headerlink" title="测量"></a>测量</h4><hr>
+<p>如果你需要在布局计算阶段定义如何测量你的component,那么你就需要实现@OnMeasure方法.</p>
+<p>现在,让我们假设我们需要我们的ColorComponent有一个默认的宽度,并且当它的高度未定义的时候,能够强制执行一定的宽高比.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnMeasure</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(</span></span></div><div class="line">    ComponentContext context,</div><div class="line">    ComponentLayout layout,</div><div class="line">    <span class="keyword">int</span> widthSpec,</div><div class="line">    <span class="keyword">int</span> heightSpec,</div><div class="line">    Size size) &#123;</div><div class="line"></div><div class="line">  <span class="comment">// If width is undefined, set default size.</span></div><div class="line">  <span class="keyword">if</span> (SizeSpec.getMode(widthSpec) == SizeSpec.UNSPECIFIED) &#123;</div><div class="line">    size.width = <span class="number">40</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    size.width = SizeSpec.getSize(widthSpec);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// If height is undefined, use 1.5 aspect ratio.</span></div><div class="line">  <span class="keyword">if</span> (SizeSpec.getMode(heightSpec) == SizeSpec.UNSPECIFIED) &#123;</div><div class="line">    size.height = width * <span class="number">1.5</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    size.height = SizeSpec.getSize(heightSpec);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在@OnMeasure方法中,你可以像以前一样使用@Prop注释访问Component props.SizeSpec的API类似于Android中的<a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html" target="_blank" rel="external">MeasureSpec</a>.</p>
+<p>就像@OnPrepare一样,@OnMeasure方法也能生成阶段间的输出(能够使用@FromMeasure注释的参数来访问),并且可以在后台线程中执行.</p>
+<p></p><br><p></p><p></p>
+<h4 id="ShouldUpdate"><a href="#ShouldUpdate" class="headerlink" title="ShouldUpdate"></a>ShouldUpdate</h4><hr>
+<p>Mount Spec可以使用@ShouldUpdate注释定义一个方法来避免在更新时进行重新测试和重新挂载。<br>@ShouldUpdate的调用的前提是component是”纯渲染函数”。一个组件如果是纯渲染函数,那么它的渲染结果只取决于它的prop和状态.这意味着在@OnMount期间，组件不应该访问任何可变的全局变量。<br>一个@MountSpec可以通过使用@MountSpec注释的pureRender参数来定自己为”纯渲染的”。只有纯渲染的Component可以假设当prop不更改时就不需要重新挂载。@ShouldUpdate函数可以定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ShouldUpdate</span>(onMount = <span class="keyword">true</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldUpdate</span><span class="params">(Diff&lt;String&gt; someStringProp)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> !someStringProp.getPrevious().equals(someStringProp.getNext());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>shouldUpdate中的参数是prop或状态的<a href="http://fblitho.com/javadoc/com/facebook/litho/Diff" target="_blank" rel="external">对比差异</a>。Diff是一个包含旧Component层级结构中@Prop或@State的值以及新Component层级结构中相同的@Prop或@State值的类。在这个示例中，我们将someStringProp定义为一个String类型的@Prop。shouldUpdate方法将收到一个Diff<string>，以便能够比较此@Prop的旧值和新值。<br>shouldUpdate必须考虑在@OnMount时使用的任何prop和状态。它可以安全地忽略仅在“@OnMount/@OnUnbind”时间使用的prop和状态，因为这两个方法无论如何都会被执行。</string></p>
+<p>@ShouldUpdate注释上的onMount属性可以控制是否在挂载时进行shouldUpdate检查。默认情况下，Litho将尝试在layout的时候执行检查，但是在检查布局差异功能被关闭的时候,作为替代方案,将onMount设置为true,在挂载时执行此检查就变得很有用了。默认情况下，onMount属性被设置为false，因为相等检查本身可能很耗时,这会使挂载性能变得更差。</p>
+<p>@ShouldUpdate注释方法目前仅支持在@MountSpec中使用。我们计划在未来在更复杂的布局中也支持它，但目前在@LayoutSpec中用@ShouldUpdate注释的方法将不起作用。</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/28/Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-LayoutSpecs
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-28</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><h3 id="Layout-Specs"><a href="#Layout-Specs" class="headerlink" title="Layout Specs"></a>Layout Specs</h3><p></p><br><p></p><p></p>
+<p>Layout Spec在逻辑上等同于Android的View的组合.它简单的把一些已经存在的component组合到一个不可变的布局树中.</p>
+<p>实现一个layout spec非常简单:你只需要写一个标注为@OnCreateLayout的方法,并且让它返回一个不可变的<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentLayout" target="_blank" rel="external">ComponentLayout</a>对象的树.</p>
+<p>让我们从一个简单的例子开始:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop <span class="keyword">int</span> color,</div><div class="line">      @Prop String title) &#123;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> Row.create(c)</div><div class="line">          .alignItems(CENTER)</div><div class="line">          .child(</div><div class="line">              SolidColor.create(c)</div><div class="line">                  .colorRes(color)</div><div class="line">                  .withLayout()</div><div class="line">                  .widthDip(<span class="number">40</span>)</div><div class="line">                  .heightDip(<span class="number">40</span>))</div><div class="line">          .child(</div><div class="line">              Text.create(c)</div><div class="line">                  .text(title)</div><div class="line">                  .textSizeRes(R.dimen.my_text_size)</div><div class="line">                  .withLayout()</div><div class="line">                  .flexGrow(<span class="number">1f</span>))</div><div class="line">          .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>正如你所见,layout spec类使用@LayoutSpec注释.</p>
+<p>用@OnCreateLayout注释标注的方法必须以<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentContext" target="_blank" rel="external">ComponentContext</a>作为第一个参数,并且在它后面有以@Prop标注的其他参数.注释处理器将会在编译的时候对它们和其他API的不变性进行验证.</p>
+<p>在上面的示例中,布局树中有一个根容器,容器中有两个水平堆叠(Row.create)且垂直居中(Align.CENTER)的子节点.</p>
+<p>第一个子节点是一个<a href="http://fblitho.com/javadoc/com/facebook/litho/widget/SolidColor" target="_blank" rel="external">SolidColor</a> component,它拥有一个colorRes的Prop和40dp的宽和高.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SolidColor.create(c)</div><div class="line">    .uri(imageUri)</div><div class="line">    .withLayout()</div><div class="line">    .width(<span class="number">40</span>)</div><div class="line">    .height(<span class="number">40</span>)</div></pre></td></tr></table></figure>
+<p>第二个子节点是一个<a href="http://fblitho.com/javadoc/com/facebook/litho/widget/Text" target="_blank" rel="external">Text</a> Component,它拥有一个名叫text的prop,并且使用grow(1f)填充了Myconponent中的剩余的水平空间(等同于Android LinearLayout中的layoutWeight).文字大小实在my_text_size尺寸文件中定义的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Text.create(c)</div><div class="line">    .text(title)</div><div class="line">    .textSizeRes(R.dimen.my_text_size)</div><div class="line">    .withLayout()</div><div class="line">    .grow(<span class="number">1f</span>)</div></pre></td></tr></table></figure></p>
+<p>你可以查看完整的<a href="https://facebook.github.io/yoga/docs/learn-more/" target="_blank" rel="external">Yoga</a>文档来获取所有框架开放出的布局特性.</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作
             </a>
         </h1>
         <div class="post-info">
@@ -159,11 +283,22 @@
     
         <div class="content">
             <p>欢迎转载,转载请标明出处.</p>
-<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="使用Component"><a href="#使用Component" class="headerlink" title="使用Component"></a>使用Component</h3><p></p><br><p></p><p></p>
-<p>生成的Component类为你在spec中定义的props提供了一个简单的构造器.为了在你的UI中使用生成的Component,你需要一个<a href="http://fblitho.com/javadoc/com/facebook/litho/LithoView" target="_blank" rel="external">LithoView</a>,它是一个Android ViewGroup并且可以渲染component.</p>
-<p>你可以通过以下的代码制定一个LithoView来渲染一个Component.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component component = MyComponent.create()</div><div class="line">    .title(<span class="string">"My title"</span>)</div><div class="line">    .imageUri(Uri.parse(<span class="string">"http://example.com/myimage"</span>)</div><div class="line">    .build();</div><div class="line">LithoView view = LithoView.create(context, component);</div></pre></td></tr></table></figure></p>
-<p>在这个例子中,MyComponent将被托管给LithoView,你可以在你的程序中像使用一个普通的Android View一样去使用这个LithoView.你可以在<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%95%99%E7%A8%8B/">教程</a>里看到如何在一个Acitivity中使用这个LithoView.</p>
-<p>重要提醒:示例中的LithoView,如果你在你的View层级中直接使用,将会在主线程中同步的执行布局任务.有关在主线程之外执行布局任务的更多信息,请参阅<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">异步布局</a>.</p>
+<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p></p><br><p></p><p></p>
+<h4 id="集成Litho至你的工程"><a href="#集成Litho至你的工程" class="headerlink" title="集成Litho至你的工程"></a>集成Litho至你的工程</h4><hr>
+<p></p><br><p></p><p></p>
+<h5 id="gradle"><a href="#gradle" class="headerlink" title="gradle"></a>gradle</h5><p></p><br><p></p><p></p>
+<p>你可以通过在你的Gradle的build.gradle文件中添加以下代码来把Litho添加至你的Android工程中.<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">  <span class="comment">// Litho</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-core:0.2.0'</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-widget:0.2.0'</span></div><div class="line">  provided <span class="string">'com.facebook.litho:litho-annotations:0.2.0'</span></div><div class="line"></div><div class="line">  annotationProcessor <span class="string">'com.facebook.litho:litho-processor:0.2.0'</span></div><div class="line">  </div><div class="line">  <span class="comment">// SoLoader </span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.soloader:soloader:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 调试选项</span></div><div class="line">  debugCompile <span class="string">'com.facebook.litho:litho-stetho:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 集成Fresco的支持</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-fresco:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 供测试</span></div><div class="line">  testCompile <span class="string">'com.facebook.litho:litho-testing:0.2.0'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p></p><br><p></p><p></p>
+<h5 id="Buck"><a href="#Buck" class="headerlink" title="Buck"></a>Buck</h5><p></p><br><p></p><p></p>
+<p>你可以通过在你的Buck的BUCK文件中添加以下代码来把Litho添加至你的Android工程中.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">android_prebuilt_aar(</div><div class="line">    name = &quot;litho&quot;,</div><div class="line">    aar = &quot;:litho.aar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-core.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-core:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">prebuilt_jar(</div><div class="line">    name = &quot;litho-annotation&quot;,</div><div class="line">    binary_jar = &quot;:litho-annotation.jar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-processor.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-processor:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">prebuilt_jar(</div><div class="line">    name = &quot;litho-processor&quot;,</div><div class="line">    binary_jar = &quot;:litho-processor.jar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-annotation.jar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-annotation:jar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">android_prebuilt_aar(</div><div class="line">    name = &quot;litho-widget&quot;,</div><div class="line">    aar = &quot;:litho-widget.aar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-widget.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-widget:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">litho_android_library(</div><div class="line">    ...</div><div class="line">    # Your target here</div><div class="line">    ...</div><div class="line">    annotation_processor_deps = [</div><div class="line">        &quot;:litho-annotation&quot;,</div><div class="line">        &quot;:litho-processor&quot;,</div><div class="line">    ],</div><div class="line">    annotation_processors = [</div><div class="line">        &quot;com.facebook.litho.processor.ComponentsProcessor&quot;,</div><div class="line">    ],</div><div class="line">    deps = [</div><div class="line">        &quot;:litho&quot;,</div><div class="line">        &quot;:litho-widget&quot;,</div><div class="line">        ...</div><div class="line">    ]</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<p></p><br><p></p><p></p>
+<h4 id="测试集成情况"><a href="#测试集成情况" class="headerlink" title="测试集成情况"></a>测试集成情况</h4><hr>
+<p>你可以通过添加一个由Litho创建的view至activity来测试集成情况</p>
+<p>首先,初始化SoLoader.Litho依赖<a href="https://github.com/facebook/SoLoader" target="_blank" rel="external">SoLoader</a>来加载底层布局引擎<a href="https://facebook.github.io/yoga/" target="_blank" rel="external">Yoga</a>所需的本地库.在Application中进行这个操作比较合适.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[MyApplication.java]</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate();</div><div class="line">    </div><div class="line">    SoLoader.init(<span class="keyword">this</span>, <span class="keyword">false</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后,添加一个预定义的Litho Text组件至activity来显示”Hello world”.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[MyActivity.java]</div><div class="line"><span class="keyword">import</span> com.facebook.litho.ComponentContext;</div><div class="line"><span class="keyword">import</span> com.facebook.litho.LithoView;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">    </div><div class="line">    <span class="keyword">final</span> ComponentContext c = <span class="keyword">new</span> ComponentContext(<span class="keyword">this</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> LithoView lithoView = LithoView.create(</div><div class="line">    	<span class="keyword">this</span> <span class="comment">/* context */</span>, </div><div class="line">    	Text.create(c)</div><div class="line">            .text(<span class="string">"Hello, World!"</span>)</div><div class="line">            .textSizeDip(<span class="number">50</span>)</div><div class="line">            .build());</div><div class="line">    	</div><div class="line">    setContentView(lithoView);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在,当你运行app的时候,你就可以看到”Hello World”显示在屏幕上.</p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
 <p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
@@ -220,6 +355,45 @@
 <p>这个生成的ComponentLifeCycle类就是今后你会在你的产品中<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8Component/">使用</a>的类.而Spec类将在运行的时候在新生成的代码里被用作一个代表类.</p>
 <p>生成的新类暴露出来的唯一的API是一个create（…）方法，它为您在Spec类中声明的@Props返回相应的Component.Builder。</p>
 <p>在运行的时候,同一种类型的component的所有实例都共享相同的componentLifecycle引用.这意味着一个spec实例对应的是一种component类型,而不是一个component实例.</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-使用Component
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-27</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="使用Component"><a href="#使用Component" class="headerlink" title="使用Component"></a>使用Component</h3><p></p><br><p></p><p></p>
+<p>生成的Component类为你在spec中定义的props提供了一个简单的构造器.为了在你的UI中使用生成的Component,你需要一个<a href="http://fblitho.com/javadoc/com/facebook/litho/LithoView" target="_blank" rel="external">LithoView</a>,它是一个Android ViewGroup并且可以渲染component.</p>
+<p>你可以通过以下的代码制定一个LithoView来渲染一个Component.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component component = MyComponent.create()</div><div class="line">    .title(<span class="string">"My title"</span>)</div><div class="line">    .imageUri(Uri.parse(<span class="string">"http://example.com/myimage"</span>)</div><div class="line">    .build();</div><div class="line">LithoView view = LithoView.create(context, component);</div></pre></td></tr></table></figure></p>
+<p>在这个例子中,MyComponent将被托管给LithoView,你可以在你的程序中像使用一个普通的Android View一样去使用这个LithoView.你可以在<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%95%99%E7%A8%8B/">教程</a>里看到如何在一个Acitivity中使用这个LithoView.</p>
+<p>重要提醒:示例中的LithoView,如果你在你的View层级中直接使用,将会在主线程中同步的执行布局任务.有关在主线程之外执行布局任务的更多信息,请参阅<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">异步布局</a>.</p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
 <p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
@@ -324,8 +498,8 @@
 
     <div class="post-header index">
         <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-准备工作
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-View的扁平化/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-View的扁平化
             </a>
         </h1>
         <div class="post-info">
@@ -344,22 +518,97 @@
     
         <div class="content">
             <p>欢迎转载,转载请标明出处.</p>
-<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p></p><br><p></p><p></p>
-<h4 id="集成Litho至你的工程"><a href="#集成Litho至你的工程" class="headerlink" title="集成Litho至你的工程"></a>集成Litho至你的工程</h4><hr>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="View的扁平化"><a href="#View的扁平化" class="headerlink" title="View的扁平化"></a>View的扁平化</h3><p></p><br><p></p><p></p>
+<p>让我们看看下方的例子.它包含一个图片一个标题和一个副标题.在传统的Android View 系统里,你可以使用几个view来包含这些元素,再用一个viewGroup来包裹它们.</p>
+<p><img src="/image/20170426150749.png" alt=""></p>
+<p>Litho会自动减少最终UI层级结构所包含的View数量。布局计算这一步产生的布局树只是你的UI的蓝图，与Android的View没有直接的耦合。这允许框架在挂载组件之前处理布局树以获得最佳渲染性能。</p>
+<p>我们使用两种途径来实现:<br>首先，Litho能在布局计算后完全忽略容器类，因为它们在挂载步骤中不会被用到。拿我们的例子来说，在挂载时，不会有单独包含标题和子标题的View。<br>第二，Litho可以选择挂载一个view或者挂载一个drawable。事实上，对于Litho框架里的大多数核心组件，如Text和Image，挂载的是drawable，而不是view。</p>
+<p>这些优化的结果是,示例中UI的组件实际上将被渲染为一个独立,扁平的视图。你可以在下面的屏幕截图中看到这一点(<a href="">启用了开发者选项中的显示布局边界</a>).</p>
+<p><img src="/image/20170426150806.png" alt=""></p>
+<p>虽然扁平化的view对于减少内存使用和缩短绘制时间有相当大的好处，但它并不是一颗银弹(译者注:即它不是一个对所有情况都能用的万用方案)。当我们希望依赖Android view的特定功能时（例如触摸事件处理，可访问性或局部无效化），Litho提供一个非常通用的系统来自动对挂载Component的视图层次结构”去扁平化”。例如，如果要在示例中启用单击图像或文本，如果设置了<a href="">点击处理器</a>,框架将自动把文字或图像包装在view一个新的view中。</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-27</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h3><p></p><br><p></p><p></p>
+<p>设备屏幕通常以每秒60帧的速率刷新。为了能提供流畅的UI效果，应用程序需要能够每16ms一帧的速度持续渲染我们的UI。如果达不到这个时间标准，就会导致丢帧和不佳的用户体验。随着UI变得越来越复杂，在限制的时间内越来越难以完成所有的渲染工作。特别是在动态滚动的界面上,因为新的UI块的不断被添加到屏幕上，完成渲染就变得尤其有挑战性。<br>Android使用<a href="https://developer.android.com/guide/topics/ui/layout/recyclerview.html" target="_blank" rel="external">RecyclerView</a>解决了这个问题，RecyclerView是一个动态UI容器，可以通过创建足够的视图来填充屏幕，然后在UI滚动中回收和重用它们，以显示大量数据中的元素。</p>
+<p><img src="/image/20170426171157.gif" alt=""></p>
+<p>RecyclerView支持异构的内容的显示。为此，它会根据item的不同的类型将其保留在不同的池中。虽然这个方法在简单情况下工作正常，但是对于具有许多不同item类型的UI，这种方法已经被证明是有问题的。在具有许多item类型的场景中，如果一个item随着滚动事件进入视窗,则它这种类型的item是RecyclerView第一次显示可能性非常大。如果发生这种情况，RecyclerView必须为这个item进行内存分配。在短短的16ms中,RecyclerView必须为新的item进行绑定，测量和布局工作。</p>
+<p><img src="/image/20170426172051.gif" alt=""></p>
 <p></p><br><p></p><p></p>
-<h5 id="gradle"><a href="#gradle" class="headerlink" title="gradle"></a>gradle</h5><p></p><br><p></p><p></p>
-<p>你可以通过在你的Gradle的build.gradle文件中添加以下代码来把Litho添加至你的Android工程中.<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">  <span class="comment">// Litho</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-core:0.2.0'</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-widget:0.2.0'</span></div><div class="line">  provided <span class="string">'com.facebook.litho:litho-annotations:0.2.0'</span></div><div class="line"></div><div class="line">  annotationProcessor <span class="string">'com.facebook.litho:litho-processor:0.2.0'</span></div><div class="line">  </div><div class="line">  <span class="comment">// SoLoader </span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.soloader:soloader:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 调试选项</span></div><div class="line">  debugCompile <span class="string">'com.facebook.litho:litho-stetho:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 集成Fresco的支持</span></div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.facebook.litho:litho-fresco:0.2.0'</span></div><div class="line"></div><div class="line">  <span class="comment">// 供测试</span></div><div class="line">  testCompile <span class="string">'com.facebook.litho:litho-testing:0.2.0'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p></p><br><p></p><p></p>
-<h5 id="Buck"><a href="#Buck" class="headerlink" title="Buck"></a>Buck</h5><p></p><br><p></p><p></p>
-<p>你可以通过在你的Buck的BUCK文件中添加以下代码来把Litho添加至你的Android工程中.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">android_prebuilt_aar(</div><div class="line">    name = &quot;litho&quot;,</div><div class="line">    aar = &quot;:litho.aar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-core.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-core:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">prebuilt_jar(</div><div class="line">    name = &quot;litho-annotation&quot;,</div><div class="line">    binary_jar = &quot;:litho-annotation.jar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-processor.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-processor:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">prebuilt_jar(</div><div class="line">    name = &quot;litho-processor&quot;,</div><div class="line">    binary_jar = &quot;:litho-processor.jar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-annotation.jar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-annotation:jar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">android_prebuilt_aar(</div><div class="line">    name = &quot;litho-widget&quot;,</div><div class="line">    aar = &quot;:litho-widget.aar&quot;,</div><div class="line">    visibility = [&quot;PUBLIC&quot;],</div><div class="line">)</div><div class="line"></div><div class="line">remote_file(</div><div class="line">    name = &quot;litho-widget.aar&quot;,</div><div class="line">    sha1 = &quot;sha1here&quot;,</div><div class="line">    url = &quot;mvn:com.facebook.litho:litho-widget:aar:0.2.0&quot;,</div><div class="line">)</div><div class="line"></div><div class="line">litho_android_library(</div><div class="line">    ...</div><div class="line">    # Your target here</div><div class="line">    ...</div><div class="line">    annotation_processor_deps = [</div><div class="line">        &quot;:litho-annotation&quot;,</div><div class="line">        &quot;:litho-processor&quot;,</div><div class="line">    ],</div><div class="line">    annotation_processors = [</div><div class="line">        &quot;com.facebook.litho.processor.ComponentsProcessor&quot;,</div><div class="line">    ],</div><div class="line">    deps = [</div><div class="line">        &quot;:litho&quot;,</div><div class="line">        &quot;:litho-widget&quot;,</div><div class="line">        ...</div><div class="line">    ]</div><div class="line">)</div></pre></td></tr></table></figure></p>
-<p></p><br><p></p><p></p>
-<h4 id="测试集成情况"><a href="#测试集成情况" class="headerlink" title="测试集成情况"></a>测试集成情况</h4><hr>
-<p>你可以通过添加一个由Litho创建的view至activity来测试集成情况</p>
-<p>首先,初始化SoLoader.Litho依赖<a href="https://github.com/facebook/SoLoader" target="_blank" rel="external">SoLoader</a>来加载底层布局引擎<a href="https://facebook.github.io/yoga/" target="_blank" rel="external">Yoga</a>所需的本地库.在Application中进行这个操作比较合适.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[MyApplication.java]</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate();</div><div class="line">    </div><div class="line">    SoLoader.init(<span class="keyword">this</span>, <span class="keyword">false</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后,添加一个预定义的Litho Text组件至activity来显示”Hello world”.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[MyActivity.java]</div><div class="line"><span class="keyword">import</span> com.facebook.litho.ComponentContext;</div><div class="line"><span class="keyword">import</span> com.facebook.litho.LithoView;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">    </div><div class="line">    <span class="keyword">final</span> ComponentContext c = <span class="keyword">new</span> ComponentContext(<span class="keyword">this</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> LithoView lithoView = LithoView.create(</div><div class="line">    	<span class="keyword">this</span> <span class="comment">/* context */</span>, </div><div class="line">    	Text.create(c)</div><div class="line">            .text(<span class="string">"Hello, World!"</span>)</div><div class="line">            .textSizeDip(<span class="number">50</span>)</div><div class="line">            .build());</div><div class="line">    	</div><div class="line">    setContentView(lithoView);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>现在,当你运行app的时候,你就可以看到”Hello World”显示在屏幕上.</p>
+<h4 id="Litho增量式回收"><a href="#Litho增量式回收" class="headerlink" title="Litho增量式回收"></a>Litho增量式回收</h4><hr>
+<p>我们希望为Litho建立一个更具可扩展性和更高效率的回收系统，同时我们希望从API中消除item类型的复杂性。在Litho中，布局的描述与实际用于在屏幕上呈现UI的Views和Drawable完全不相关。这意味着当我们需要在屏幕上放置一个新的RecyclerView item时，我们已经完全知道了该item的内容和该item与其余UI的相对位置。这允许Litho完全摆脱item类型的概念。在recyclerview滚动时,比起重复利用view来表示item,我们选择了增量式的利用例如Text或者Image这样的构建块.这种做法在传统的Android view上是不可能的，因为在传统的Android中,我们需要在完整的view tree上进行布局计算,当我们算出所有view的位置时，一切都已经被实例化了。</p>
+<p><img src="/image/20170426172130.gif" alt=""></p>
+<p>回收利用像Text这样的”原始item”能够大大增加应用程序的内存效率，比如你可以回收list中的任何一个Text的给其他需要显示的Text来用。最重要的是，由于我们的布局是提前计算的，所以我们能够确切地知道一个新的item什么时候会变得可见，这意味着，我们可以在屏幕上引入非常少量的”原始item”来显示每一帧,而不是在一帧中绑定并且绘制一个大的view tree。</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-增量式挂载/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-增量式挂载
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-27</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="增量式挂载"><a href="#增量式挂载" class="headerlink" title="增量式挂载"></a>增量式挂载</h3><p></p><br><p></p><p></p>
+<p>虽然Component提供了扁平化的view层级结构和<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">主线程外的布局计算</a>功能,但是装载操作(包括对view和drawable的创建,回收和附加工作)在复杂的component中依然花费主线程的大量资源,尤其是那些包含很多view的component.</p>
+<p>Litho可以把装载component的花费平均分配至每一个UI帧来避免卡顿,并且对开发者来说是透明的.</p>
+<p>使用增量式挂载(默认支持),LithoView将只会挂载与当前可见区域大小相适应的内容并且卸载(并且回收)那些已经看不见了的component.</p>
+<p><img src="/image/20170426150321.png" alt=""><br>如果你使用Litho的<a href="">异步RecyclerView</a>支持,框架将会无缝的支持增量式挂载.</p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
 <p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
 <p></p><br><p></p><br><p></p><br><p></p><p></p>
@@ -423,221 +672,6 @@
 
 </div>
             
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-增量式挂载/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-增量式挂载
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-27</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="增量式挂载"><a href="#增量式挂载" class="headerlink" title="增量式挂载"></a>增量式挂载</h3><p></p><br><p></p><p></p>
-<p>虽然Component提供了扁平化的view层级结构和<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">主线程外的布局计算</a>功能,但是装载操作(包括对view和drawable的创建,回收和附加工作)在复杂的component中依然花费主线程的大量资源,尤其是那些包含很多view的component.</p>
-<p>Litho可以把装载component的花费平均分配至每一个UI帧来避免卡顿,并且对开发者来说是透明的.</p>
-<p>使用增量式挂载(默认支持),LithoView将只会挂载与当前可见区域大小相适应的内容并且卸载(并且回收)那些已经看不见了的component.</p>
-<p><img src="/image/20170426150321.png" alt=""><br>如果你使用Litho的<a href="">异步RecyclerView</a>支持,框架将会无缝的支持增量式挂载.</p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-异步布局/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-异步布局
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-27</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="异步布局-layout"><a href="#异步布局-layout" class="headerlink" title="异步布局(layout)"></a>异步布局(layout)</h3><p></p><br><p></p><p></p>
-<h4 id="不可变性和线程安全"><a href="#不可变性和线程安全" class="headerlink" title="不可变性和线程安全"></a>不可变性和线程安全</h4><hr>
-<p>大多数线程安全的问题都是由对可变对象的并发读写造成的.在Java中,一个典型的此类问题是这样的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeExampleClass</span> </span>&#123;</div><div class="line">   <span class="keyword">private</span> <span class="keyword">int</span> mCounter;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">getThisOrThat</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (mCounter &gt; <span class="number">10</span>) &#123;</div><div class="line">       <span class="keyword">return</span> <span class="string">"this"</span>:</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">       mCounter++;</div><div class="line">       <span class="keyword">return</span> <span class="string">"that"</span>;</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
-<p>如果有多个线程都调用一个共享的SomeExampleClass中的的getThisOrThat方法,这就构成了一个最经典的竞争情况.当第二个线程进入这个方法尝试获取mCounter时,第一个线程可能正在执行mCounter++,因此我们不能确定第二个线程从mCounter中读到的值是什么.出现这个问题的原因是在我们的代码中存在一个可变的状态变量(mCounter),并且有多个线程尝试去读写它.竞争情况是我们在使用多线程编程去处理任务时最常遇到的问题.</p>
-<p>而这就是为什么传统上在多线程上运行UI代码都会变得极其复杂的原因.Android中的view是有状态的和可变的.比如一个TextView,它必须保持追踪现在显示的文字,并且暴露一个setText()方法给开发者去修改文字.这就意味着Android UI框架如果决定要分流一些工作(例如layout计算)到第二个线程中去做,它就必须解决用户在其他线程中调用setText()而改变了当前正在布局计算中的文字的问题.</p>
-<p>让我们回到我们刚才的示例代码.我们说主要的问题就在我们的getThisOrThat()方法中的可变状态变量mCounter的存取.有没有一种方法能够做到功能上和它一致但是却不用依赖这种可变的状态变量呢?让我们想象一种情况:所有对象在创建后都不能改变其自身的内容.如果没有内容改变,我们也就不会有线程间尝试存取同一个状态变量的竞争问题了.我们可以重新改写一下我们的示例代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Result</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> mCounter;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> String mValue;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Result</span><span class="params">(<span class="keyword">int</span> counter, <span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">      mCounter = counter;</div><div class="line">      mValue = value;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeExampleClass</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title">getThisOrThat</span><span class="params">(<span class="keyword">int</span> counterValue)</span> </span>&#123;</div><div class="line">      <span class="keyword">if</span> (counterValue &gt; <span class="number">10</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Result(counterValue, <span class="string">"this"</span>):</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Result(counterValue + <span class="number">1</span>, <span class="string">"that"</span>);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p>我们的方法现在完全是线程安全的了,因为它从来没有改动过任何SomeExampleClass中的内部状态变量.在这个例子中,getThisOrThat()方法我们称之为”纯净方法(pure function)”,因为它的输出结果只取决于输入值并且这么做没有任何副作用.</p>
-<p>在Litho中我们尝试应用这种概念到布局计算中.Component是一个包含了所有提供给布局方法的输入值的不可变的类.而这些输入值以@Prop和@State的格式提供.这也解释了为什么我们需要@Prop和@State为不可变的.因为如果它们是可变的,我们获取布局的函数就失去了作为”纯净方法”的性质.</p>
-<p>在Java中,不可变性在中通常意味着需要花费时间做更多的内存分配动作.即使在我们的简单的示例中,我们每次调用我们的方法时都需要分配一个新的Result对象内存.而Litho使用池的概念和<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/">代码生成</a>的概念来自动优化对象内存分配,使得内存分配花费降到最小.</p>
-<p></p><br><p></p><p></p>
-<h4 id="同步和异步操作"><a href="#同步和异步操作" class="headerlink" title="同步和异步操作"></a>同步和异步操作</h4><hr>
-<p>Litho同时提供了同步的和异步的API用来做布局计算.两种API都是线程安全的并且都可以在任意线程中调用.最终的布局总是呈现最后使用setRoot()或者setRootAsync()设置的Component.</p>
-<p>同步的布局计算能够确保一旦在<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentTree" target="_blank" rel="external">ComponentTree</a>中调用了setRoot,布局计算的结果就能立刻准备好,以供挂载到<a href="http://fblitho.com/javadoc/com/facebook/litho/LithoView" target="_blank" rel="external">LithoView</a>上.</p>
-<p>而它的主要的缺陷是由于它的布局计算工作发生在调用setRoot()的线程中,因此不建议在主线程中调用它.而在另一方面,在一些情况下,你不能在展示一些东西在屏幕上之前就等待后台进程去计算布局,比如说你要展示的item已经在视窗口了.这种情况下调用setRoot()是最好的选择.使用同步的操作也能是集成Litho至已存在的线程体系变得更加简单.如果你的程序已经拥有了一个复杂并且结构化的线程设计,你可能会不想依赖Litho的内建线程去完成布局计算.</p>
-<p>异步的布局计算将会使用Litho的”布局线程”来计算布局,这意味着当调用布局计算时,布局工作将会立刻进入另一个独立线程的工作队列中而不会立即向它的调用线程返回结果.异步的布局操作被广泛的应用于<a href="">RecyclerBinder</a>的示例中.</p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-回收机制
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-27</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h3><p></p><br><p></p><p></p>
-<p>设备屏幕通常以每秒60帧的速率刷新。为了能提供流畅的UI效果，应用程序需要能够每16ms一帧的速度持续渲染我们的UI。如果达不到这个时间标准，就会导致丢帧和不佳的用户体验。随着UI变得越来越复杂，在限制的时间内越来越难以完成所有的渲染工作。特别是在动态滚动的界面上,因为新的UI块的不断被添加到屏幕上，完成渲染就变得尤其有挑战性。<br>Android使用<a href="https://developer.android.com/guide/topics/ui/layout/recyclerview.html" target="_blank" rel="external">RecyclerView</a>解决了这个问题，RecyclerView是一个动态UI容器，可以通过创建足够的视图来填充屏幕，然后在UI滚动中回收和重用它们，以显示大量数据中的元素。</p>
-<p><img src="/image/20170426171157.gif" alt=""></p>
-<p>RecyclerView支持异构的内容的显示。为此，它会根据item的不同的类型将其保留在不同的池中。虽然这个方法在简单情况下工作正常，但是对于具有许多不同item类型的UI，这种方法已经被证明是有问题的。在具有许多item类型的场景中，如果一个item随着滚动事件进入视窗,则它这种类型的item是RecyclerView第一次显示可能性非常大。如果发生这种情况，RecyclerView必须为这个item进行内存分配。在短短的16ms中,RecyclerView必须为新的item进行绑定，测量和布局工作。</p>
-<p><img src="/image/20170426172051.gif" alt=""></p>
-<p></p><br><p></p><p></p>
-<h4 id="Litho增量式回收"><a href="#Litho增量式回收" class="headerlink" title="Litho增量式回收"></a>Litho增量式回收</h4><hr>
-<p>我们希望为Litho建立一个更具可扩展性和更高效率的回收系统，同时我们希望从API中消除item类型的复杂性。在Litho中，布局的描述与实际用于在屏幕上呈现UI的Views和Drawable完全不相关。这意味着当我们需要在屏幕上放置一个新的RecyclerView item时，我们已经完全知道了该item的内容和该item与其余UI的相对位置。这允许Litho完全摆脱item类型的概念。在recyclerview滚动时,比起重复利用view来表示item,我们选择了增量式的利用例如Text或者Image这样的构建块.这种做法在传统的Android view上是不可能的，因为在传统的Android中,我们需要在完整的view tree上进行布局计算,当我们算出所有view的位置时，一切都已经被实例化了。</p>
-<p><img src="/image/20170426172130.gif" alt=""></p>
-<p>回收利用像Text这样的”原始item”能够大大增加应用程序的内存效率，比如你可以回收list中的任何一个Text的给其他需要显示的Text来用。最重要的是，由于我们的布局是提前计算的，所以我们能够确切地知道一个新的item什么时候会变得可见，这意味着，我们可以在屏幕上引入非常少量的”原始item”来显示每一帧,而不是在一帧中绑定并且绘制一个大的view tree。</p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/27/Facebook出品的Android声明式开源新框架Litho文档翻译-View的扁平化/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-View的扁平化
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-27</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="View的扁平化"><a href="#View的扁平化" class="headerlink" title="View的扁平化"></a>View的扁平化</h3><p></p><br><p></p><p></p>
-<p>让我们看看下方的例子.它包含一个图片一个标题和一个副标题.在传统的Android View 系统里,你可以使用几个view来包含这些元素,再用一个viewGroup来包裹它们.</p>
-<p><img src="/image/20170426150749.png" alt=""></p>
-<p>Litho会自动减少最终UI层级结构所包含的View数量。布局计算这一步产生的布局树只是你的UI的蓝图，与Android的View没有直接的耦合。这允许框架在挂载组件之前处理布局树以获得最佳渲染性能。</p>
-<p>我们使用两种途径来实现:<br>首先，Litho能在布局计算后完全忽略容器类，因为它们在挂载步骤中不会被用到。拿我们的例子来说，在挂载时，不会有单独包含标题和子标题的View。<br>第二，Litho可以选择挂载一个view或者挂载一个drawable。事实上，对于Litho框架里的大多数核心组件，如Text和Image，挂载的是drawable，而不是view。</p>
-<p>这些优化的结果是,示例中UI的组件实际上将被渲染为一个独立,扁平的视图。你可以在下面的屏幕截图中看到这一点(<a href="">启用了开发者选项中的显示布局边界</a>).</p>
-<p><img src="/image/20170426150806.png" alt=""></p>
-<p>虽然扁平化的view对于减少内存使用和缩短绘制时间有相当大的好处，但它并不是一颗银弹(译者注:即它不是一个对所有情况都能用的万用方案)。当我们希望依赖Android view的特定功能时（例如触摸事件处理，可访问性或局部无效化），Litho提供一个非常通用的系统来自动对挂载Component的视图层次结构”去扁平化”。例如，如果要在示例中启用单击图像或文本，如果设置了<a href="">点击处理器</a>,框架将自动把文字或图像包装在view一个新的view中。</p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/04/25/Facebook出品的Android声明式开源新框架Litho文档翻译-编写动机 /">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-编写动机
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-04-25</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="编写动机"><a href="#编写动机" class="headerlink" title="编写动机"></a>编写动机</h3><p></p><br><p></p><p></p>
-<p>在Android上构建一个列表式界面相当的简单，虽然大多数app要更加复杂一点，但是大体上你只需要编写一个列表中Item的layout，然后再将其挂载到RecytclerView的adapter上去就完成了。</p>
-<p>当你的adapter拥有许多类型的view的时候，你就不得不去考虑一种更健壮的方法来回收view。如果你有很多很多种类型的view时，每次一个新的类型的view被显示的时候，RecyclerView都会不断的inflate新的view，这很可能导致滚动时帧数的下降。</p>
-<p>你可以通过回收和重复利用,在多个item之前共享一些view实例,来达到减少view的类型的目的,但是随着你添加了更多的逻辑到你的产品中去,bug往往会越来越容易发生.</p>
-<p>如果列表的item比较复杂,你很可能会优化你的layouts.对于简单的情况,你可以直接使用Android库里的layout来避免许多的”坑”,但是情况往往比较复杂.在这种情况下,一个通用的做法是特别为你的需求定制特殊的Custom view(客制化view).使用Custom view可以有效的提升UI的效率,但是由于它们会增添项目的复杂度并且维护成本也很高,所以会拖慢项目进度.</p>
-<p>你也可以通过分解一个复杂的item为多个小的item,来把滚动时计算布局和绘制每一帧的花费的时间分解开来,从而优化RecyclerView的item.这种方法在一些情况下效果不错,但是它通常会导致adapter中view类型的爆炸式增长,并且有可能仍然需要花费代价去创建Custom Views,这就依然导致了我们上面所讲到的问题.</p>
-<p>Litho主要工作就是把优化RecyclerView的复杂工作打包起来.在使用Litho时,没有view类型的区别,你可以在后台线程中提前、无缝的构建你的UI,并且自动地把他们渲染成更加扁平化的层级结构。这些梦幻的特性，你都可以免费的通过一套非常简单的编程模式来获得。</p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
         </section>
     </div>
 </div>
@@ -680,19 +714,19 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/09/Facebook出品的Android声明式开源新框架Litho文档翻译-无障碍环境/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-Styles/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-可见性的处理/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
                 <a class="footer-post" href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-触摸事件/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-事件处理概述/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/05/Facebook出品的Android声明式开源新框架Litho文档翻译-Recycler/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>
