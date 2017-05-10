@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="努力进行各种研究...">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Dr.Fu">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Facebook出品的Android声明式开源新框架Litho文档翻译-自定义布局"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="努力进行各种研究..." />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="FH01号自律型科学实验舱"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Facebook出品的Android声明式开源新框架Litho文档翻译-自定义布局 - FH01号自律型科学实验舱</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-自定义布局/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-自定义布局
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-10</span>
+            
+            <a href="#disqus_thread" class="comments">Comments</a>
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>欢迎转载,转载请标明出处.</p>
+<h2 id="进阶指引"><a href="#进阶指引" class="headerlink" title="进阶指引"></a>进阶指引</h2><h3 id="自定义布局"><a href="#自定义布局" class="headerlink" title="自定义布局"></a>自定义布局</h3><p></p><br><p></p><p></p>
+<p>Litho依赖<a href="https://facebook.github.io/yoga/" target="_blank" rel="external">Yoga</a>(一个可以创建复杂UI的强大的布局引擎)来进行布局计算.然而,也会存在一些例外情况,这些时候只使用Yoga还不够,你可能还需要自己实现测量和布局的工作.</p>
+<p>Litho提供了一套自定义布局的API,用来在<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentTree" target="_blank" rel="external">ComponentTree</a>被创建的和被测量时访问尺寸信息,或者在一个隔离的环境中测量Component.</p>
+<p><strong>重要,请注意</strong>:这些API会造成<strong>不可忽略</strong>的性能开销,因此,我们建议仅仅在确定有必要使用它们的时候再去使用它们.</p>
+<p></p><br><p></p><p></p>
+<h4 id="用例"><a href="#用例" class="headerlink" title="用例"></a>用例</h4><hr>
+<ul>
+<li><strong>一个Component布局树依赖于它自己的大小 和/或 它的孩子的大小</strong>.例如这种情况:一个Component布局只能在它的孩子们的大小符合父亲的限制的时候才使用它们,如果不符合,这个布局就需要使用作为后备的孩子来代替.</li>
+<li><strong>一个容器的孩子们必须根据它们的大小或者它们父亲的大小进行绝对位置的手动定位</strong>.Yoga可以绝对定位孩子在父亲中的位置.然而,这个位置本身可能取决于使用父母的大小限制计算后的孩子的大小尺寸.如果需要,margin或者padding也需要手动被计算在内.</li>
+</ul>
+<p></p><br><p></p><p></p>
+<h4 id="大小约束"><a href="#大小约束" class="headerlink" title="大小约束"></a>大小约束</h4><hr>
+<p>在使用API之前,你需要已经熟悉了传统Android View的onMeasure方法并且了解什么是MeasureSpec,因为Litho使用了一个类似的概念,名叫SizeSpec.</p>
+<p>类似于Android的MeasureSpec,Litho的SizeSpec也是由size和mode组成的.可用的mode与MeasureSpec一样,有三种:UNSPECIFIED,EXACTLY和AT_MOST.</p>
+<p></p><br><p></p><p></p>
+<h4 id="测量一个Component"><a href="#测量一个Component" class="headerlink" title="测量一个Component"></a>测量一个Component</h4><hr>
+<p>我们可以使用给定的SizeSpec在隔离环境下测量Component.结果将会被填充进一个作为参数传递进去的Size对象中.</p>
+<p>在下面的例子中,我们使用一个UNSPECIFIED的SizeSpec去测量一个Text Component,这表示文字的一行能够是无限长的.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component&lt;Text&gt; textComponent = Text.create(c)</div><div class="line">    .textSizeSp(<span class="number">16</span>)</div><div class="line">    .text(“Some text to measure.”)</div><div class="line">    .build();</div><div class="line"></div><div class="line"><span class="keyword">final</span> Size outputSize = <span class="keyword">new</span> Size();</div><div class="line">textComponent.measure(</div><div class="line">    c, </div><div class="line">    SizeSpec.makeSizeSpec(<span class="number">0</span>, UNSPECIFIED),</div><div class="line">    SizeSpec.makeSizeSpec(<span class="number">0</span>, UNSPECIFIED),</div><div class="line">    outputSize);</div><div class="line"></div><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> textComponentWidth = outputSize.width;</div><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> textComponentHeight = outputSize.height;</div></pre></td></tr></table></figure>
+<p></p><br><p></p><p></p>
+<h4 id="SizeSpec"><a href="#SizeSpec" class="headerlink" title="SizeSpec"></a>SizeSpec</h4><hr>
+<p>在布局创建期间,API可以提供Component将要被测量时使用的SizeSpec信息.为了获取这些信息,我们需要用一个新的@OnCreateLayoutWithSizeSpec注释替代原来的@OnCreateLayout.新的注释方法的参数,除了标准的ComponentContext,还有两个整型,它们分别代表width spec和height spec.</p>
+<p>在下面的例子中,我们测量了一个Text Component来检查给定的文字是否适合可用的空间.如果不适合,则使用一个Image Component代替Text Component.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayoutWithSizeSpec</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayoutWithSizeSpec</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      <span class="keyword">int</span> widthSpec,</div><div class="line">      <span class="keyword">int</span> heightSpec,</div><div class="line">      @Prop SomeObject someProp) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> Component&lt;Text&gt; textComponent = Text.create(c)</div><div class="line">        .textSizeSp(<span class="number">16</span>)</div><div class="line">        .text(“Some text to measure.”)</div><div class="line">        .build();</div><div class="line"></div><div class="line">    <span class="comment">// UNSPECIFIED sizeSpecs will measure the text as being one line only,</span></div><div class="line">    <span class="comment">// having unlimited width.</span></div><div class="line">    <span class="keyword">final</span> Size textOutputSize = <span class="keyword">new</span> Size();</div><div class="line">    textComponent.measure(</div><div class="line">        c, </div><div class="line">        SizeSpec.makeSizeSpec(<span class="number">0</span>, UNSPECIFIED),</div><div class="line">        SizeSpec.makeSizeSpec(<span class="number">0</span>, UNSPECIFIED),</div><div class="line">        textOutputSize);</div><div class="line"></div><div class="line">    <span class="comment">// Small component to use in case textComponent doesn’t fit within</span></div><div class="line">    <span class="comment">// the current layout.</span></div><div class="line">    <span class="keyword">final</span> Component&lt;Image&gt; imageComponent = Image.create(c)</div><div class="line">        .srcRes(R.drawable.some_icon)</div><div class="line">        .build();</div><div class="line"></div><div class="line">    <span class="comment">// Assuming SizeSpec.getMode(widthSpec) == EXACTLY or AT_MOST.</span></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> layoutWidth = SizeSpec.getSize(widthSpec);</div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> textFits = (textOutputSize.width &lt;= layoutWidth);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> Layout.create(c, textFits ? textComponent : imageComponent)</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/Android/">#Android</a> <a href="/tags/实用库/">#实用库</a> <a href="/tags/Litho/">#Litho</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    欢迎访问我的博客,本博客使用github page和Hexo搭建,技术小白自我进化中,很乐意讨论技术问题,欢迎给我发邮件~~
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-创建一个ComponentTree/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-手动增量式挂载/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-TreeProp/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-自定义布局/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/Web前端知识/">Web前端知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/其他知识/">其他知识</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/Android知识/">Android知识</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/ShikiEiki">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:515073770@qq.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
