@@ -139,6 +139,85 @@
 
     <div class="post-header index">
         <h1 class="title">
+            <a href="/2017/05/11/Facebook出品的Android声明式开源新框架Litho文档翻译-开发者选项/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-开发者选项
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-11</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="开发者选项"><a href="#开发者选项" class="headerlink" title="开发者选项"></a>开发者选项</h3><p></p><br><p></p><p></p>
+<p>除了Stetho之外,我们还提供了两个编译时标志,用于可视化你的应用程序的Component层级结构.这类似于Android的内部设置:显示View边界,但是由于Litho并不是总是使用Android View,所以我们实现了我们自己的方式使它变得更加实用.</p>
+<p>在<a href="http://fblitho.com/javadoc/com/facebook/litho/config/ComponentsConfiguration" target="_blank" rel="external">ComponentsConfiguration</a>类中有两个字段来控制这些.</p>
+<h2 id="debugHighlightInteractiveBound"><a href="#debugHighlightInteractiveBound" class="headerlink" title="debugHighlightInteractiveBound"></a><strong>debugHighlightInteractiveBound</strong></h2><p>dfdfdfdf</p>
+<h2 id="debugHighlightInteractiveBound-1"><a href="#debugHighlightInteractiveBound-1" class="headerlink" title="debugHighlightInteractiveBound"></a><strong>debugHighlightInteractiveBound</strong></h2><p>dfdfdfdf</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/05/11/Facebook出品的Android声明式开源新框架Litho文档翻译-调试/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-调试
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-11</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p></p><br><p></p><p></p>
+<h4 id="Stetho"><a href="#Stetho" class="headerlink" title="Stetho"></a>Stetho</h4><hr>
+<p><a href="http://facebook.github.io/stetho/" target="_blank" rel="external">Stetho</a>是一个非常好的Android调试工具,我们已经确保了它能够与Litho一起使用.为了在Stetho中启用Litho调试,需要在你的Application实现中的onCreate()方法里添加下列的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate();</div><div class="line">    SoLoader.init(<span class="keyword">this</span>, <span class="keyword">false</span>);</div><div class="line">    </div><div class="line">    Stetho.initialize(</div><div class="line">        Stetho.newInitializerBuilder(<span class="keyword">this</span>)</div><div class="line">              .enableWebKitInspector(<span class="keyword">new</span> LithoWebKitInspector(<span class="keyword">this</span>))</div><div class="line">              .build());</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这会使Litho完全集成进stetho中.启用了Litho支持之后,你只用打开你的app然后再你的浏览器中打开chrome://inspect</p>
+<p><img src="/image/20170511142823.png" alt=""></p>
+<p>点击你想查看的程序的查看链接(我们使用的是Litho sample app).这将会打开一个UI查看器,你可以在其中查看你程序的View和Component的层级结构.</p>
+<p><img src="/image/20170511143232.png" alt=""></p>
+<p>当查看一个Litho Component的时候,你也可以直接在查看器中更改你的UI中的内容!这样就可以在不重新编译和运行你的程序的情况下,通过调整margin,padding或者其他属性来实现快速设计迭代.你也可以使用它来快速测试你的UI是否能处理不同长度的文本.<br><img src="/image/20170511143319.png" alt=""></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
             <a href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-最佳实践/">
                 Facebook出品的Android声明式开源新框架Litho文档翻译-最佳实践
             </a>
@@ -596,97 +675,6 @@
 
 </div>
             
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-Styles/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-Styles
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-05-08</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><h3 id="RTL"><a href="#RTL" class="headerlink" title="RTL"></a>RTL</h3><p></p><br><p></p><p></p>
-<p>Component可以像Android View的属性集的构建器一样,使用Android的style资源来构建它的prop.它让开发者能够直接使用style资源来定义静态的prop值或者prop的默认值.</p>
-<p>可以通过在你的Component的Spec中实现@OnLoadStyle方法来支持Style.它的第一个参数是ComponentContext,你可以用它来检索生成一个包含stype资源的TypedArray.其他的参数需要是Output类型,并且名称与类型都与你想要设置的prop相同.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop String prop1,</div><div class="line">      @Prop <span class="keyword">int</span> prop2) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> ...;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>举个例子,为了对上面的MyComponent的两个prop实现style的支持,你先要按照惯例定义样式属性:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line">&lt;resources&gt;</div><div class="line"></div><div class="line">  &lt;attr name="prop1" format="string" /&gt;</div><div class="line">  &lt;attr name="prop2" format="integer" /&gt;</div><div class="line"></div><div class="line">  &lt;declare-styleable name="MyComponent"&gt;</div><div class="line">    &lt;attr name="prop1" /&gt;</div><div class="line">    &lt;attr name="prop2" /&gt;</div><div class="line">  &lt;/declare-styleable&gt;</div><div class="line"></div><div class="line">&lt;/resources&gt;</div></pre></td></tr></table></figure>
-<p>接着你可以在你的@OnLoadStyle方法中收集这些属性的值:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnLoadStyle</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">onLoadStyle</span><span class="params">(</span></span></div><div class="line">    ComponentContext c,</div><div class="line">    Output&lt;String&gt; prop1,</div><div class="line">    Output&lt;Integer&gt; prop2) &#123;</div><div class="line"></div><div class="line">  <span class="keyword">final</span> DataBoundTypedArray a =</div><div class="line">      c.obtainDataBoundAttributes(R.styleable.Text, <span class="number">0</span>);</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, size = a.getIndexCount(); i &lt; size; i++) &#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> attr = a.getIndex(i);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (attr == R.styleable.MyComponent_prop1) &#123;</div><div class="line">      prop1.set(a.getString(attr));</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (attr == R.styleable.MyComponent_prop2) &#123;</div><div class="line">      prop2.set(a.getInteger(attr));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  a.recycle();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样,你就可以在style中定义prop1和prop2的值了:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line">&lt;resources&gt;</div><div class="line">    &lt;style name="SomeStyle"&gt;</div><div class="line">        &lt;item name="prop1"&gt;@string/some_string&lt;/item&gt;</div><div class="line">    &lt;/style&gt;</div><div class="line">&lt;/resources&gt;</div></pre></td></tr></table></figure></p>
-<p>并且在MyComponent中使用它:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">MyComponent.create(c, <span class="number">0</span>, R.style.SomeStyle)</div><div class="line">    .prop2(<span class="number">10</span>)</div><div class="line">    .build();</div></pre></td></tr></table></figure></p>
-<p>这样,prop1就能够从@string/some_string资源中获取值了.</p>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/05/08/Facebook出品的Android声明式开源新框架Litho文档翻译-可见性的处理/">
-                Facebook出品的Android声明式开源新框架Litho文档翻译-可见性的处理
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-05-08</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Android知识/">Android知识</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
-<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><h3 id="可见性的处理"><a href="#可见性的处理" class="headerlink" title="可见性的处理"></a>可见性的处理</h3><p></p><br><p></p><p></p>
-<h4 id="可见范围的类型"><a href="#可见范围的类型" class="headerlink" title="可见范围的类型"></a>可见范围的类型</h4><hr>
-<p>框架现在支持4中类型过的可见性事件:</p>
-<ul>
-<li><a href="http://fblitho.com/javadoc/com/facebook/litho/VisibleEvent" target="_blank" rel="external">可见事件</a>:这种事件会在Component至少有1像素是可见的时候被触发.</li>
-<li><a href="http://fblitho.com/javadoc/com/facebook/litho/InvisibleEvent" target="_blank" rel="external">不可见事件</a>:这种事件会在Component不再有任何像素是可见的时候被触发.</li>
-<li><a href="http://fblitho.com/javadoc/com/facebook/litho/FocusedVisibleEvent" target="_blank" rel="external">聚焦可见事件</a>:这种事件会在Component至少占据视窗一半的的时候被触发,如果Component的大小小于视窗的一半,则会在Component完全可见的时候被触发.</li>
-<li><a href="http://fblitho.com/javadoc/com/facebook/litho/FullImpressionVisibleEvent" target="_blank" rel="external">完全展示可见事件</a>:当整个Component在某个时间点通过视窗时，会触发此事件。</li>
-</ul>
-<p></p><br><p></p><p></p>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><hr>
-<p>可见性范围需要相关的Component支持<a href="">增量式挂载</a></p>
-<p>为一个Component注册可见性事件handler,你可以按照注册其他事件handler相同的<a href="https://shikieiki.github.io/2017/05/05/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%A6%82%E8%BF%B0/">步骤</a>来操作.</p>
-<p>下面是示例:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLayoutSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">  </div><div class="line">    <span class="keyword">return</span> Column.create(c)</div><div class="line">        .alignItems(Align.STRETCH)</div><div class="line">        .child(Text.create(c)</div><div class="line">            .text(<span class="string">"This is MY layout spec"</span>)</div><div class="line">            .withLayout()</div><div class="line">            .visibleHandler(MyLayoutSpec.onTitleVisible(c))</div><div class="line">            .invisibleHandler(MyLayoutSpec.onTitleInvisible(c)))</div><div class="line">        .focusedHandler(MyLayoutSpec.onComponentFocused(c, <span class="string">"someStringParam"</span>))</div><div class="line">        .fullImpressionHandler(MyLayoutSpec.onComponentFullImpression(c)))</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(VisibleEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onTitleVisible</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">    Log.d(<span class="string">"VisibilityRanges"</span>, <span class="string">"The title entered the Visible Range"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(InvisibleEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onTitleInvisible</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">    Log.d(<span class="string">"VisibilityRanges"</span>, <span class="string">"The title is no longer visible"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(FocusedVisibleEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onComponentFocused</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Param String stringParam) &#123;</div><div class="line">    Log.d(</div><div class="line">      <span class="string">"VisibilityRanges"</span>,</div><div class="line">      <span class="string">"The component is focused with param: "</span> + contentString);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@OnEvent</span>(FullImpressionVisibleEvent.class)</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onComponentFullImpression</span><span class="params">(ComponentContext c)</span> </span>&#123;</div><div class="line">    Log.d(<span class="string">"VisibilityRanges"</span>, <span class="string">"The component has logged a full impression"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p></p><br><p></p><br><p></p><br><p></p><p></p>
-<h5 id="回到导航页"><a href="#回到导航页" class="headerlink" title="回到导航页"></a><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></h5><p></p><br><p></p><br><p></p><br><p></p><p></p>
-
-        </div>
-    
-
-</div>
-            
         </section>
     </div>
 </div>
@@ -729,19 +717,19 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/11/Facebook出品的Android声明式开源新框架Litho文档翻译-开发者选项/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/05/11/Facebook出品的Android声明式开源新框架Litho文档翻译-调试/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-最佳实践/">Facebook出品的Android声明式开源新框</a>
             </li>
             
             <li>
                 <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-创建一个ComponentTree/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-手动增量式挂载/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-TreeProp/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>
