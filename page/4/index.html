@@ -139,6 +139,46 @@
 
     <div class="post-header index">
         <h1 class="title">
+            <a href="/2017/04/25/Facebook出品的Android声明式开源新框架Litho文档翻译-Litho是什么/">
+                Facebook出品的Android声明式开源新框架Litho文档翻译-Litho是什么?
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-25</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/Android知识/">Android知识</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>欢迎转载,转载请标明出处.</p>
+<h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="Litho是什么"><a href="#Litho是什么" class="headerlink" title="Litho是什么?"></a>Litho是什么?</h3><p></p><br><p></p><p></p>
+<p>Litho是一个为在Android系统上高效的构建用户界面(UI)的声明式框架.它允许你通过使用一套基于Java注解的简单的API来编写最优化的Android views.这个框架<a href="https://shikieiki.github.io/2017/04/25/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8/">主要是被设计</a>用来实现在RecyclerView上构建复杂的可滚动的UI的.</p>
+<p>通过Litho,你可以使用Litho的Components(组件)代替传统的Android Views来构建UI.一个Component本质上是一个带有不可变输入(我们称之为props)并且返回component hierachy(组件层级结构)来描述UI的方法.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop String name) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Text.create(c)</div><div class="line">        .text(<span class="string">"Hello, "</span> + name)</div><div class="line">        .textSizeRes(R.dimen.my_text_size)</div><div class="line">        .textColor(Color.BLACK)</div><div class="line">        .withLayout()</div><div class="line">        .paddingDip(ALL, <span class="number">10</span>)</div><div class="line">        .build();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>你只需要简单的声明你想要展示的元素,然后Litho就会自动的渲染他们,并且以一种高效的方式——<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">使用后台线程计算布局参数</a>、<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-View%E7%9A%84%E6%89%81%E5%B9%B3%E5%8C%96/">自动扁平化层级结构</a>、还有使用<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%A2%9E%E9%87%8F%E5%BC%8F%E6%8C%82%E8%BD%BD/">增量式挂载机制</a>处理复杂的component。</p>
+<p>我们的<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%95%99%E7%A8%8B/">教程</a>可以指导你一步一步的在你的APP里使用Litho，或者你也可以阅读”快速开始”来学习如何<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E7%BC%96%E5%86%99Component/">编写</a>和<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8Component/">使用</a>Litho的Component。</p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+<p><a href="https://shikieiki.github.io/2017/05/04/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E6%80%BB%E8%A7%88%E5%92%8C%E5%AF%BC%E8%88%AA/">回到导航页</a></p>
+<p></p><br><p></p><br><p></p><br><p></p><p></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
             <a href="/2017/03/01/为你的Github生成漂亮的徽章和进度条/">
                 为你的Github README生成漂亮的徽章和进度条
             </a>
@@ -390,6 +430,10 @@
         <ul>
             
             <li>
+                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-最佳实践/">Facebook出品的Android声明式开源新框</a>
+            </li>
+            
+            <li>
                 <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-创建一个ComponentTree/">Facebook出品的Android声明式开源新框</a>
             </li>
             
@@ -399,10 +443,6 @@
             
             <li>
                 <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-TreeProp/">Facebook出品的Android声明式开源新框</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/05/10/Facebook出品的Android声明式开源新框架Litho文档翻译-自定义布局/">Facebook出品的Android声明式开源新框</a>
             </li>
             
         </ul>
