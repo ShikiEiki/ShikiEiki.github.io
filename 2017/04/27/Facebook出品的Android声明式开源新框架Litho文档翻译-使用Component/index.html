@@ -144,7 +144,7 @@
             
                 <span class="date">2017-04-27</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            <a href="#disqus_thread" class="comments">Comentarios</a>
             
                 <span class="category">
                     <a href="/categories/Android知识/">Android知识</a>
@@ -159,7 +159,7 @@
         
 
         <!-- Post Content -->
-        <p>欢迎转载,转载请标明出处.</p>
+        <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/using-started" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="使用Component"><a href="#使用Component" class="headerlink" title="使用Component"></a>使用Component</h3><p></p><br><p></p><p></p>
 <p>生成的Component类为你在spec中定义的props提供了一个简单的构造器.为了在你的UI中使用生成的Component,你需要一个<a href="http://fblitho.com/javadoc/com/facebook/litho/LithoView" target="_blank" rel="external">LithoView</a>,它是一个Android ViewGroup并且可以渲染component.</p>
 <p>你可以通过以下的代码制定一个LithoView来渲染一个Component.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> Component component = MyComponent.create()</div><div class="line">    .title(<span class="string">"My title"</span>)</div><div class="line">    .imageUri(Uri.parse(<span class="string">"http://example.com/myimage"</span>)</div><div class="line">    .build();</div><div class="line">LithoView view = LithoView.create(context, component);</div></pre></td></tr></table></figure></p>

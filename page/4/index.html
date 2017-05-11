@@ -158,7 +158,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/inc-mount-architecture" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="增量式挂载"><a href="#增量式挂载" class="headerlink" title="增量式挂载"></a>增量式挂载</h3><p></p><br><p></p><p></p>
 <p>虽然Component提供了扁平化的view层级结构和<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%BC%82%E6%AD%A5%E5%B8%83%E5%B1%80/">主线程外的布局计算</a>功能,但是装载操作(包括对view和drawable的创建,回收和附加工作)在复杂的component中依然花费主线程的大量资源,尤其是那些包含很多view的component.</p>
 <p>Litho可以把装载component的花费平均分配至每一个UI帧来避免卡顿,并且对开发者来说是透明的.</p>
@@ -197,7 +197,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/recycling" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h3><p></p><br><p></p><p></p>
 <p>设备屏幕通常以每秒60帧的速率刷新。为了能提供流畅的UI效果，应用程序需要能够每16ms一帧的速度持续渲染我们的UI。如果达不到这个时间标准，就会导致丢帧和不佳的用户体验。随着UI变得越来越复杂，在限制的时间内越来越难以完成所有的渲染工作。特别是在动态滚动的界面上,因为新的UI块的不断被添加到屏幕上，完成渲染就变得尤其有挑战性。<br>Android使用<a href="https://developer.android.com/guide/topics/ui/layout/recyclerview.html" target="_blank" rel="external">RecyclerView</a>解决了这个问题，RecyclerView是一个动态UI容器，可以通过创建足够的视图来填充屏幕，然后在UI滚动中回收和重用它们，以显示大量数据中的元素。</p>
 <p><img src="/image/20170426171157.gif" alt=""></p>
@@ -241,7 +241,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/motivation" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="编写动机"><a href="#编写动机" class="headerlink" title="编写动机"></a>编写动机</h3><p></p><br><p></p><p></p>
 <p>在Android上构建一个列表式界面相当的简单，虽然大多数app要更加复杂一点，但是大体上你只需要编写一个列表中Item的layout，然后再将其挂载到RecytclerView的adapter上去就完成了。</p>
 <p>当你的adapter拥有许多类型的view的时候，你就不得不去考虑一种更健壮的方法来回收view。如果你有很多很多种类型的view时，每次一个新的类型的view被显示的时候，RecyclerView都会不断的inflate新的view，这很可能导致滚动时帧数的下降。</p>
@@ -282,7 +282,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/intro" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="Litho是什么"><a href="#Litho是什么" class="headerlink" title="Litho是什么?"></a>Litho是什么?</h3><p></p><br><p></p><p></p>
 <p>Litho是一个为在Android系统上高效的构建用户界面(UI)的声明式框架.它允许你通过使用一套基于Java注解的简单的API来编写最优化的Android views.这个框架<a href="https://shikieiki.github.io/2017/04/25/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8/">主要是被设计</a>用来实现在RecyclerView上构建复杂的可滚动的UI的.</p>
 <p>通过Litho,你可以使用Litho的Components(组件)代替传统的Android Views来构建UI.一个Component本质上是一个带有不可变输入(我们称之为props)并且返回component hierachy(组件层级结构)来描述UI的方法.</p>
@@ -322,7 +322,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/uses" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="介绍Litho"><a href="#介绍Litho" class="headerlink" title="介绍Litho"></a>介绍Litho</h2><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p></p><br><p></p><p></p>
 <p>Litho的首要使用场景为:具有复杂内容的RecyclerView.因为它甚至在具有复杂的item和多种类型的内容RecyclerView上也表现出了极好的滚动特性.这在使用传统的android view的情况下是非常具有挑战性的工作.</p>
 <p>你也可以因为Litho简单的声明式的API来选择采用Litho来构建UI,Litho的基于单向数据流函数式编程模型会在你的产品变得复杂的时候也很容易理解.</p>

@@ -158,7 +158,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/repo-structure" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="参与"><a href="#参与" class="headerlink" title="参与"></a>参与</h2><h3 id="仓库架构"><a href="#仓库架构" class="headerlink" title="仓库架构"></a>仓库架构</h3><p></p><br><p></p><p></p>
 <p>这是一个描述仓库中什么东西在哪儿的快速细分文档.</p>
 <p>/docs/</p>
@@ -232,7 +232,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/contributing" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="参与"><a href="#参与" class="headerlink" title="参与"></a>参与</h2><h3 id="如何参与"><a href="#如何参与" class="headerlink" title="如何参与"></a>如何参与</h3><p></p><br><p></p><p></p>
 <p>Facebook Litho团队非常欢迎你的参与.</p>
 <p>我们使用GitHub的Pull系统进行操作.请在<a href="https://github.com/facebook/litho/blob/master/CONTRIBUTING.md" target="_blank" rel="external">这里</a>查看详细信息.</p>
@@ -268,7 +268,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/developer-options" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="开发者选项"><a href="#开发者选项" class="headerlink" title="开发者选项"></a>开发者选项</h3><p></p><br><p></p><p></p>
 <p>除了Stetho之外,我们还提供了两个编译时标志,用于可视化你的应用程序的Component层级结构.这类似于Android的内部设置:显示View边界,但是由于Litho并不是总是使用Android View,所以我们实现了我们自己的方式使它变得更加实用.</p>
 <p>在<a href="http://fblitho.com/javadoc/com/facebook/litho/config/ComponentsConfiguration" target="_blank" rel="external">ComponentsConfiguration</a>类中有两个字段来控制这些.</p>
@@ -313,7 +313,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/debugging" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p></p><br><p></p><p></p>
 <h4 id="Stetho"><a href="#Stetho" class="headerlink" title="Stetho"></a>Stetho</h4><hr>
 <p><a href="http://facebook.github.io/stetho/" target="_blank" rel="external">Stetho</a>是一个非常好的Android调试工具,我们已经确保了它能够与Litho一起使用.为了在Stetho中启用Litho调试,需要在你的Application实现中的onCreate()方法里添加下列的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate();</div><div class="line">    SoLoader.init(<span class="keyword">this</span>, <span class="keyword">false</span>);</div><div class="line">    </div><div class="line">    Stetho.initialize(</div><div class="line">        Stetho.newInitializerBuilder(<span class="keyword">this</span>)</div><div class="line">              .enableWebKitInspector(<span class="keyword">new</span> LithoWebKitInspector(<span class="keyword">this</span>))</div><div class="line">              .build());</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -354,7 +354,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/best-practices" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p></p><br><p></p><p></p>
 <h4 id="编码风格"><a href="#编码风格" class="headerlink" title="编码风格"></a>编码风格</h4><hr>
 <p>指引:</p>
@@ -422,7 +422,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/component-tree" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="进阶指引"><a href="#进阶指引" class="headerlink" title="进阶指引"></a>进阶指引</h2><h3 id="创建一个ComponentTree"><a href="#创建一个ComponentTree" class="headerlink" title="创建一个ComponentTree"></a>创建一个ComponentTree</h3><p></p><br><p></p><p></p>
 <p>在<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E4%BD%BF%E7%94%A8Component/">使用Component</a>指引中,我们看到了如何创建一个根Component并且把它传递给一个LithoView,接着LithoView将会处理使用给出的根Component创建<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentTree" target="_blank" rel="external">ComponentTree</a>的其他步骤.ComponentTree会使用线程安全的方法来管理你的Component的生命周期,使得你可以在任何的线程中创建和使用它们.虽然通常你可以不需要去创建和管理你自己的ComponentTree,但是也有部分情况你需要自己去做.下面就会讲到是你应该如何创建一个ComponentTree,传递给它一个根Component,并且把它添加到一个LithoView中去.这个ComponentTree的create()方法会返回一个暴露出ComponentTree的设置方法的<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentTree.Builder" target="_blank" rel="external">Builder</a>.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> LithoView lithoView = <span class="keyword">new</span> LithoView(<span class="keyword">this</span>);</div><div class="line">    <span class="keyword">final</span> ComponentContext context = <span class="keyword">new</span> ComponentContext(<span class="keyword">this</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> Component text = Text.create(context)</div><div class="line">        .text(<span class="string">"Hello World"</span>)</div><div class="line">        .textSizeDip(<span class="number">50</span>)</div><div class="line">        .build();</div><div class="line">    <span class="keyword">final</span> ComponentTree componentTree = ComponentTree.create(context, text).build();</div><div class="line"></div><div class="line">    lithoView.setComponentTree(componentTree);</div><div class="line">    setContentView(lithoView);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -458,7 +458,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/inc-mount" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="进阶指引"><a href="#进阶指引" class="headerlink" title="进阶指引"></a>进阶指引</h2><h3 id="增量式挂载"><a href="#增量式挂载" class="headerlink" title="增量式挂载"></a>增量式挂载</h3><p></p><br><p></p><p></p>
 <h4 id="手动增量式挂载"><a href="#手动增量式挂载" class="headerlink" title="手动增量式挂载"></a>手动增量式挂载</h4><hr>
 <p>如果你没有使用<a href="http://fblitho.com/javadoc/com/facebook/litho/widget/Recycler" target="_blank" rel="external">Recycler</a>,你也仍然可以集成<a href="https://shikieiki.github.io/2017/04/27/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-%E5%A2%9E%E9%87%8F%E5%BC%8F%E6%8C%82%E8%BD%BD/">增量式挂载</a>到你的现有的UI实现里.你必须在每次LithoView的可见区域发生变化的时候显式的通知框架,通过调用:</p>
@@ -496,7 +496,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/tree-props" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="进阶指引"><a href="#进阶指引" class="headerlink" title="进阶指引"></a>进阶指引</h2><h3 id="TreeProp"><a href="#TreeProp" class="headerlink" title="TreeProp"></a>TreeProp</h3><p></p><br><p></p><p></p>
 <p>@TreeProp是那些自动并且静默的从父Component传递给子Component的<a href="https://shikieiki.github.io/2017/05/02/Facebook%E5%87%BA%E5%93%81%E7%9A%84Android%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%B0%E6%A1%86%E6%9E%B6Litho%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91-Props/">prop</a>.</p>
 <p>TreeProp非常方便,它能够在一个布局树上分享上下文数据或者工具而又不需要显式的传递prop给每一个层级结构上的Component.</p>
@@ -542,7 +542,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/custom-layout" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="进阶指引"><a href="#进阶指引" class="headerlink" title="进阶指引"></a>进阶指引</h2><h3 id="自定义布局"><a href="#自定义布局" class="headerlink" title="自定义布局"></a>自定义布局</h3><p></p><br><p></p><p></p>
 <p>Litho依赖<a href="https://facebook.github.io/yoga/" target="_blank" rel="external">Yoga</a>(一个可以创建复杂UI的强大的布局引擎)来进行布局计算.然而,也会存在一些例外情况,这些时候只使用Yoga还不够,你可能还需要自己实现测量和布局的工作.</p>
 <p>Litho提供了一套自定义布局的API,用来在<a href="http://fblitho.com/javadoc/com/facebook/litho/ComponentTree" target="_blank" rel="external">ComponentTree</a>被创建的和被测量时访问尺寸信息,或者在一个隔离的环境中测量Component.</p>
@@ -599,7 +599,7 @@
 
     
         <div class="content">
-            <p>欢迎转载,转载请标明出处.</p>
+            <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/unit-testing" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p></p><br><p></p><p></p>
 <p>Litho通过流AssertJ方法提供了测试helper.可用的有:</p>
 <ul>

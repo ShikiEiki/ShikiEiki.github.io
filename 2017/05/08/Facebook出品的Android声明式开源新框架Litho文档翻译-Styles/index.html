@@ -144,7 +144,7 @@
             
                 <span class="date">2017-05-08</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            <a href="#disqus_thread" class="comments">Comentarios</a>
             
                 <span class="category">
                     <a href="/categories/Android知识/">Android知识</a>
@@ -159,8 +159,8 @@
         
 
         <!-- Post Content -->
-        <p>欢迎转载,转载请标明出处.</p>
-<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><h3 id="RTL"><a href="#RTL" class="headerlink" title="RTL"></a>RTL</h3><p></p><br><p></p><p></p>
+        <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/styles" target="_blank" rel="external">Litho-doc</a></p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><h3 id="Styles"><a href="#Styles" class="headerlink" title="Styles"></a>Styles</h3><p></p><br><p></p><p></p>
 <p>Component可以像Android View的属性集的构建器一样,使用Android的style资源来构建它的prop.它让开发者能够直接使用style资源来定义静态的prop值或者prop的默认值.</p>
 <p>可以通过在你的Component的Spec中实现@OnLoadStyle方法来支持Style.它的第一个参数是ComponentContext,你可以用它来检索生成一个包含stype资源的TypedArray.其他的参数需要是Output类型,并且名称与类型都与你想要设置的prop相同.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@LayoutSpec</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponentSpec</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@OnCreateLayout</span></div><div class="line">  <span class="function"><span class="keyword">static</span> ComponentLayout <span class="title">onCreateLayout</span><span class="params">(</span></span></div><div class="line">      ComponentContext c,</div><div class="line">      @Prop String prop1,</div><div class="line">      @Prop <span class="keyword">int</span> prop2) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> ...;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>

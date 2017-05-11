@@ -144,7 +144,7 @@
             
                 <span class="date">2017-05-09</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            <a href="#disqus_thread" class="comments">Comentarios</a>
             
                 <span class="category">
                     <a href="/categories/Android知识/">Android知识</a>
@@ -159,7 +159,7 @@
         
 
         <!-- Post Content -->
-        <p>欢迎转载,转载请标明出处.</p>
+        <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/rtl" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><h3 id="RTL"><a href="#RTL" class="headerlink" title="RTL"></a>RTL</h3><p></p><br><p></p><p></p>
 <p>Litho中对RTL(从右到左)布局的支持与Android的RTL支持相同.为了使你的Component支持RTL,你只需要简单的在margin和padding参数中使用START和END代替原来的LEFT和RIGHT就可以了.所有其他的工作都会由布局系统自动的完成.</p>
 <p>举例来说,这是一个布局:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Column.create(c)</div><div class="line">    .paddingDip(START, <span class="number">10</span>)</div><div class="line">    .marginDip(END, <span class="number">5</span>)</div><div class="line">    .child(...)</div><div class="line">    .child(...)</div><div class="line">    .build();</div></pre></td></tr></table></figure></p>

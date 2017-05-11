@@ -144,7 +144,7 @@
             
                 <span class="date">2017-05-05</span>
             
-            <a href="#disqus_thread" class="comments">Kommentare</a>
+            <a href="#disqus_thread" class="comments">Comentarios</a>
             
                 <span class="category">
                     <a href="/categories/Android知识/">Android知识</a>
@@ -159,7 +159,7 @@
         
 
         <!-- Post Content -->
-        <p>欢迎转载,转载请标明出处.</p>
+        <p>欢迎转载,转载请标明出处.<br>英文原文文档地址: <a href="http://fblitho.com/docs/events-overview" target="_blank" rel="external">Litho-doc</a></p>
 <h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p></p><br><p></p><p></p>
 <p>框架提供了一套多用途的API用来在事件发生的时候与Component通信.事件被声明成一个POJO并且使用@Event注释.为了方便,我们命名事件类时使用Event作为后缀.事件的类不一定必须是LayoutSpec或者MountSpec的内部类.这是因为从设计上看,Spec一般被认为是私有的概念,而事件却可以允许被多个Component使用.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Event</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorChangedEvent</span> </span>&#123;</div><div class="line">  <span class="keyword">public</span> <span class="keyword">int</span> color;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>在这个例子中我们假设我们有一个Component名叫ColorComponent.为了指明一个ColorComponent可以分发ColorChangedEvent事件,我们的ColorComponentSpec必须在注释中注明这一点.注明的方式是使用@MountSpec或者@LayoutSpec注释中的events参数.一个Component的注释可以分派多个事件.</p>
