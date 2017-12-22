@@ -1,5 +1,6 @@
 #!/bin/bash
 # ss的自动安装脚本,第一次写,写着玩玩
+# 
 
 function initEnv
 {
@@ -15,7 +16,7 @@ function initEnv
         apt-get -y autoclean
 
 }
-function fh
+function mainSetup
 {
         echo "正在安装pip和编码包..."
         apt-get -y install python-pip python-m2crypto
@@ -75,15 +76,13 @@ do
 			read -p "是否需要更新您的系统环境?(y/n)  :" answer
 			if [ "$answer" == "y" ] || [ "$answer" == "Y" ];then
 				initEnv
-				fh
 			elif [ "$answer" == "n" ] || [ "$answer" == "N" ];then
 				echo "跳过更新系统关紧,直接进入ss相关软件安装..."		
-				fh
 			else
 				echo -e "无法识别的命令,请重新输入\n"	
 			fi
 		done	
-
+                mainSetup
 	elif [ "$answer" == "n" ] || [ "$answer" == "N" ];then
 		echo "用户选择不安装,脚本退出"
 		exit 0
