@@ -62,7 +62,7 @@ function setInitRestart
                 sed -i "${linenum}c ssserver -c ~/ss.json -d restart \nexit 0" /etc/rc.local
         else
                 echo "rc.local不存在,开始新建rc.local"
-                echo "#! /bin/bash\nssserver -c ~/ss.json -d restart\nexit 0" > /etc/rc.local
+                echo -e "#! /bin/bash\nssserver -c ~/ss.json -d restart\nexit 0" > /etc/rc.local
                 chmod 755 /etc/rc.local
         fi
 }
