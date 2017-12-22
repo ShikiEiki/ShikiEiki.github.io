@@ -47,17 +47,24 @@ function mainSetup
 
 function setInitRestart
 {
-        echo "在开机启动项中删除之前的ssserver配置信息..."
-        sed -i '/ssserver/'d /etc/rc.local
-        echo "查找exit 0的位置..."
-        testvar=$(grep -n 'exit 0' /etc/rc.local | grep -v '"exit' | awk -F ':' {'print $1'})
-        echo "exit 0 所在位置行数有 : $testvar"
-        totalnum=$(echo $testvar | awk '{print NF}')
-        echo "exit 0 所在位置共有$totalnum 个"
-        linenum=$(echo $testvar | awk "{print \$$totalnum}")
-        echo "最后一个exit 0所在位置是第$linenum 行"
-        echo "在exit 0之前添加ss启动任务..."
-        sed -i "${linenum}c ssserver -c ~/ss.json -d restart \nexit 0" /etc/rc.local
+        if [ -e "/etc/rc.local" ];then
+                echo "rc.local已存在..."
+                echo "在开机启动项中删除之前的ssserver配置信息..."
+                sed -i '/ssserver/'d /etc/rc.local
+                echo "查找exit 0的位置..."
+                testvar=$(grep -n 'exit 0' /etc/rc.local | grep -v '"exit' | awk -F ':' {'print $1'})
+                echo "exit 0 所在位置行数有 : $testvar"
+                totalnum=$(echo $testvar | awk '{print NF}')
+                echo "exit 0 所在位置共有$totalnum 个"
+                linenum=$(echo $testvar | awk "{print \$$totalnum}")
+                echo "最后一个exit 0所在位置是第$linenum 行"
+                echo "在exit 0之前添加ss启动任务..."
+                sed -i "${linenum}c ssserver -c ~/ss.json -d restart \nexit 0" /etc/rc.local
+        else
+                echo "rc.local不存在,开始新建rc.local"
+                echo "#! /bin/bash\nssserver -c ~/ss.json -d restart\nexit 0" > /etc/rc.local
+                chmod 755 /etc/rc.local
+        fi
 }
 
 
